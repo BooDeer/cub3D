@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/02/05 18:12:58 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/02/07 06:54:56 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 void	*color_buffer_texture;
@@ -34,12 +33,7 @@ float		abso(float n)
 {
 	return ((n > 0) ? n : (n * -1));
 }
-/*
-**
-**
-**
-**
-*/
+
 void	struct_init(point *pl)
 {
 	pl->x = 0;
@@ -66,25 +60,26 @@ void draw_square(int x, int y,int width,int color)
 	int i = 0, j;
 	while(i < width)
 	{
-		j = 0;
-		while(j < width)
-		{
-			// data[((i + y) * WINDOW_WIDTH) + (j + x)] = color;
+		j = -1;
+		while(++j < width)
 			put_pixel((j + x), (i + y), color, color_buffer_texture);
-			j++;
-		}
 		i++;
 	}		
 }
 
-void	draw_line(point *pl, float x1, float y1)
+/*void	draw_line(point *pl)
 {
-	float dx, dy, step;
+	float dx, dy, step, x1 ,y1;
 	int		i;
 
+	// pl->rotationAngle = pl->turnDirection * pl->rotationSpeed;
+	x1 = floor(50 * cos(pl->rotationAngle) + pl->x);
+	y1 = floor(50 * sin(pl->rotationAngle) + pl->y);
+	printf("%f|%f\n", x1, y1);
+	//printf("%f\n",  pl->rotationAngle);
 	i = -1;
-	dx = abso(x1 - pl->x);
-	dy = abso(y1 - pl->y);
+	dx = x1 - pl->x;
+	dy = y1 - pl->y;
 
 	if (dx >= dy)
 		step = dx;
@@ -100,7 +95,26 @@ void	draw_line(point *pl, float x1, float y1)
 		x1 += dx;
 		y1 += dy;
 	}
+}*/
+
+void
+draw_line(point *pl, int x1, int y1)
+{
+	int x0 = (int)floor(pl->x);
+	int y0 = (int)floor(pl->y); 
+  int dx =  abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
+  int dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
+  int err = dx + dy, e2; /* error value e_xy */
+ 
+  for (;;){  /* loop */
+    put_pixel(x0,y0, 0xffffff, color_buffer_texture);
+    if (x0 == x1 && y0 == y1) break;
+    e2 = 2 * err;
+    if (e2 >= dy) { err += dy; x0 += sx; } /* e_xy+e_x > 0 */
+    if (e2 <= dx) { err += dx; y0 += sy; } /* e_xy+e_y < 0 */
+  }
 }
+
 void 	draw_map(point *pl)
 {
 	int x, y;
@@ -123,8 +137,7 @@ void 	draw_map(point *pl)
 				pl->x = x;
 				pl->y = y;
 				put_pixel(x, y, 0xffffff, color_buffer_texture);
-				draw_line(pl, 0, 0);
-				printf("%d\n%d\n", x, y);
+				// printf("%d\n%d\n", x, y);
 			}
 			
 		}
@@ -136,7 +149,7 @@ int 	move_player(int key, point *pl)
 	float	moveStep, newPlayerx, newPlayery;
 
 
-	printf("%d\n", key);
+	// printf("%d\n", key);
 	if (key == 13)
 	{
 		pl->y -= 3;
@@ -159,30 +172,29 @@ int 	move_player(int key, point *pl)
 	}
 	else if (key == 53)
 		exit(1);
+	else if (key == 124)
+		pl->rotationAngle += M_PI / 2;
+	else if (key == 123)
+		pl->rotationAngle -= M_PI / 2;
 	mlx_destroy_image(pl->mlx_ptr, color_buffer_texture);
 	color_buffer_texture = mlx_new_image(pl->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
 	// mlx_clear_window(pl->mlx_ptr, pl->win_ptr);
 	draw_map(pl);
 
-
-	
-	pl->rotationAngle += pl->turnDirection * pl->turnSpeed;
-	moveStep = pl->walkDirection * pl->moveSpeed;
-	newPlayerx = pl->x + cos(pl->rotationAngle) * moveStep;
-	newPlayery = pl->y + sin(pl->rotationAngle) * moveStep;
-
-
-
 	
 	put_pixel(pl->x, pl->y, 0xffffff, color_buffer_texture);
-	draw_line(pl, newPlayerx, newPlayery);
+	int x1 = (int)floor(pl->x + cos(pl->rotationAngle) * 50);
+	int y1 = (int)floor(pl->y + sin(pl->rotationAngle) * 50);
+
+	draw_line(pl, x1, y1);
 	mlx_put_image_to_window(pl->mlx_ptr, pl->win_ptr, color_buffer_texture, 0, 0);
 	return 0;
 }
 
-void	reset_player(int key, point *pl)
+int	reset_player(int key, point *pl)
 {
 	struct_init(pl);
+	return(0);
 }
 
 int		move_p(point *pl)
@@ -204,6 +216,7 @@ int		main()
 	pl.win_ptr = mlx_new_window(pl.mlx_ptr,WINDOW_WIDTH, WINDOW_HEIGHT,"bruh");
 	color_buffer_texture = mlx_new_image(pl.mlx_ptr, WINDOW_WIDTH,WINDOW_HEIGHT);
 	data = (int*)mlx_get_data_addr(color_buffer_texture, &a,&a,&a);
+	struct_init(&pl);
 	draw_map(&pl);
 	// mlx_hook(pl->win_ptr, 2, 0, move_player,&pl);
 	mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
