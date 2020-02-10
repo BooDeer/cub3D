@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/02/05 18:30:54 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/02/08 12:01:38 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,27 @@
 
 typedef struct 
 {
-	float x;
-	float y;
-	float	radius;
-	int turnDirection;
-	int walkDirection;
-	float rotationAngle;
-	float moveSpeed;
-	float rotationSpeed;
-	float turnSpeed;
-	void	*mlx_ptr;
-	void	*win_ptr;
+	float		x;
+	float		y;
+	float		radius;
+	int			turnDirection;
+	int			walkDirection;
+	float		rotationAngle;
+	float		moveSpeed;
+	float		rotationSpeed;
+	float		turnSpeed;
+	void		*mlx_ptr;
+	void		*win_ptr;
+	void		*color_buffer_texture;
+
 	
 }	point;
 
 void		put_pixel(int x, int y, int color, void *img);
+void		struct_init(point *pl);
+void		draw_square(int x, int y,int width,int color, point *pl);
+void		draw_line(point *pl);
+int			reset_player(int key, point *pl);
+
+
+
