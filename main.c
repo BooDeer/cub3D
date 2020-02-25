@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/02/25 13:30:33 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/02/25 15:10:09 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,18 +100,18 @@ void 	draw_map(point *pl)
 			}
 			
 		}
-				draw_square(0,0, TILE_SIZE * MINIMAP_SCALE, 0xff, pl);
+		draw_square(0,0, TILE_SIZE * MINIMAP_SCALE, 0xff, pl);
 
-				// draw_line(pl, pl->x + cos(pl->rotationAngle) * 50, pl->y + sin(pl->rotationAngle) * 50);
+		// draw_line(pl, pl->x + cos(pl->rotationAngle) * 50, pl->y + sin(pl->rotationAngle) * 50);
 	}
-					castallRays(pl);
+	castallRays(pl);
 	renderRays(pl);
 }
 
 void	renderRays(point *pl)
 {
 	for (int i = 0; i < NUM_RAYS; i++)
-		draw_line(pl, ray[i].wallHitX, ray[i].wallHitY );
+		draw_line(pl, ray[i].wallHitX, ray[i].wallHitY);
 }
 void	castRayy(float rayAngle, int id, point *pl)
 {
@@ -186,8 +186,8 @@ void	castRayy(float rayAngle, int id, point *pl)
 	xstep *= isRayFacingLeft ? -1 : 1;
 
 	ystep = TILE_SIZE * tan(rayAngle);
-	ystep *= (isRayFacingUp && xstep > 0) ? -1 : 1;
-	ystep *= (isRayFacingDown && xstep < 0) ? -1 : 1;
+	ystep *= (isRayFacingUp && ystep > 0) ? -1 : 1;
+	ystep *= (isRayFacingDown && ystep < 0) ? -1 : 1;
 	
 	float nextVertTouchX = xintercept;
 	float nextVertTouchY = yintercept;
@@ -214,7 +214,7 @@ void	castRayy(float rayAngle, int id, point *pl)
 	}
 
 	float horzHitDistance = foundHorzWallHit ? distanceBetweenPoints(pl->x, pl->y, horzWallHitX, horzWallHitY) : INT_MAX;
-	float vertHitDistance = foundVertWallHit ? distanceBetweenPoints(pl->x, pl->y, VertWallContent, VertWallHitY) : INT_MAX;
+	float vertHitDistance = foundVertWallHit ? distanceBetweenPoints(pl->x, pl->y, VertWallHitX, VertWallHitY) : INT_MAX;
 	if (vertHitDistance < horzHitDistance)
 	{
 		ray[id].distance = vertHitDistance;

@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 18:29:36 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/02/25 10:45:00 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/02/25 13:41:59 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ void	draw_line(point *pl, int x1,int y1)
 	int dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
 	int err = dx + dy, e2;
  
-	int color = rand();
+	// int color = rand();
 	while (1)
 	{
-		put_pixel(x0,y0, color, pl->color_buffer_texture);
+		put_pixel(x0,y0, 0xff0000, pl->color_buffer_texture);
 		if (x0 == x1 && y0 == y1)
 			break;
 		e2 = 2 * err;

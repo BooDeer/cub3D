@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/02/25 11:12:39 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/02/25 15:28:55 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #define WINDOW_WIDTH TILE_SIZE * MAP_NUM_COLS
 #define WINDOW_HEIGHT TILE_SIZE * MAP_NUM_ROWS
 #define FOV_ANGLE 60 * (M_PI / 180)
-#define	WALL_WIDTH 1
+#define	WALL_WIDTH 15
 #define NUM_RAYS WINDOW_WIDTH / WALL_WIDTH
 
 typedef struct player
