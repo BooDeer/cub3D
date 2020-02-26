@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/02/25 16:18:21 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/02/26 15:04:05 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void 	draw_map(point *pl)
 				y = (j * TILE_SIZE) + TILE_SIZE / 2;
 				pl->x = x;
 				pl->y = y;
-				put_pixel(x, y, 0xffffff, pl->color_buffer_texture);
+				put_pixel(MINIMAP_SCALE * x,MINIMAP_SCALE * y, 0xffffff, pl->color_buffer_texture);
 			}
 			
 		}
@@ -111,7 +111,7 @@ void 	draw_map(point *pl)
 void	renderRays(point *pl)
 {
 	for (int i = 0; i < NUM_RAYS; i++)
-		draw_line(pl, ray[i].wallHitX, ray[i].wallHitY);
+		draw_line(pl, MINIMAP_SCALE * ray[i].wallHitX, MINIMAP_SCALE * ray[i].wallHitY);
 }
 void	castRayy(float rayAngle, int id, point *pl)
 {
@@ -282,7 +282,7 @@ int 	move_player(int key, point *pl)
 	draw_map(pl);
 	// castallRays(pl);
 	// renderRays(pl);
-	put_pixel(pl->x + cos(pl->rotationAngle), pl->y + sin(pl->rotationAngle), 0xffffff, pl->color_buffer_texture);
+	put_pixel(MINIMAP_SCALE * pl->x + cos(pl->rotationAngle),MINIMAP_SCALE * pl->y + sin(pl->rotationAngle), 0xffffff, pl->color_buffer_texture);
 	mlx_put_image_to_window(pl->mlx_ptr, pl->win_ptr, pl->color_buffer_texture, 0, 0);
 	return 0;
 }

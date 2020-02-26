@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 18:29:36 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/02/25 16:19:11 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/02/26 15:01:14 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ void	draw_square(int x, int y,int width,int color, point *pl)
 
 void	draw_line(point *pl, int x1,int y1)
 {
-	int x0 = (int)floor(pl->x);
-	int y0 = (int)floor(pl->y); 
+	int x0 = MINIMAP_SCALE * (int)floor(pl->x);
+	int y0 = MINIMAP_SCALE * (int)floor(pl->y); 
 	int dx =  abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
 	int dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
 	int err = dx + dy, e2;
