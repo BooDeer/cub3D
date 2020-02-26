@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/02/26 15:06:24 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/02/26 22:08:22 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <math.h>
 #include <limits.h>
 
-#define MINIMAP_SCALE 1
+#define MINIMAP_SCALE 0.25
 #define MAP_NUM_ROWS 11
 #define MAP_NUM_COLS 15
 #define TILE_SIZE (64 * 2)
@@ -26,6 +26,15 @@
 #define FOV_ANGLE (60 * (M_PI / 180))
 #define	WALL_WIDTH 1
 #define NUM_RAYS (WINDOW_WIDTH * WALL_WIDTH)
+
+typedef struct	s_list
+{
+	int width;
+	int height;
+}				t_mapdata;
+
+#define WIDTH mapinfo->width
+#define HEIGHT mapinfo->height
 
 typedef struct player
 {
@@ -41,12 +50,10 @@ typedef struct player
 	void		*mlx_ptr;
 	void		*win_ptr;
 	void		*color_buffer_texture;
-
-	
 }	point;
 
-
 void		put_pixel(int x, int y, int color, void *img);
+void		reading_file(int fd);
 void		struct_init(point *pl);
 void		draw_square(int x, int y,int width,int color, point *pl);
 void		draw_line(point *pl, int x1, int y1);

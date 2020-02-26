@@ -6,14 +6,15 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/02/26 15:04:05 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/02/26 21:35:32 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 #include <stdio.h>
+#include "GNL/get_next_line.h"
 
-
+/*
 struct	rays
 {
 	float	rayAngle;
@@ -267,7 +268,8 @@ int 	move_player(int key, point *pl)
 	else if (key == 123)
 		pl->rotationAngle -= M_PI / 20;
 
-	pl->rotationAngle += pl->turnDirection * pl->turnSpeed;
+	// pl->rotationAngle += pl->turnDirection * pl->turnSpeed;
+	printf("%d\n", pl->turnDirection);
 	moveStep = pl->walkDirection * pl->moveSpeed;
 	pl->x = pl->x + cos(pl->rotationAngle) * moveStep;
 	pl->y = pl->y + sin(pl->rotationAngle) * moveStep;
@@ -300,23 +302,25 @@ int		move_p(point *pl)
 	mlx_hook(pl->win_ptr, 17, 0, close_window, pl);
 	return 0;
 }
-
+ */
 int		main()
 {
 
 
-	int		a;
-	point pl;
+	// int		a;
+	// point pl;
 	// void *img;
 
-	pl.mlx_ptr = mlx_init();
-	pl.win_ptr = mlx_new_window(pl.mlx_ptr,WINDOW_WIDTH, WINDOW_HEIGHT,"bruh");
-	pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WINDOW_WIDTH,WINDOW_HEIGHT);
-	data = (int*)mlx_get_data_addr(pl.color_buffer_texture, &a,&a,&a);
-	struct_init(&pl);
-	draw_map(&pl);
-	// mlx_hook(pl->win_ptr, 2, 0, move_player,&pl);
-	mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
-	mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
-	mlx_loop(pl.mlx_ptr);
+	int fd = open("cube.cub", O_RDONLY);
+	reading_file(fd);
+	// pl.mlx_ptr = mlx_init();
+	// pl.win_ptr = mlx_new_window(pl.mlx_ptr,WINDOW_WIDTH, WINDOW_HEIGHT,"bruh");
+	// pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WINDOW_WIDTH,WINDOW_HEIGHT);
+	// data = (int*)mlx_get_data_addr(pl.color_buffer_texture, &a,&a,&a);
+	// struct_init(&pl);
+	// draw_map(&pl);
+	// // mlx_hook(pl->win_ptr, 2, 0, move_player,&pl);
+	// mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
+	// mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
+	// mlx_loop(pl.mlx_ptr);
 }
