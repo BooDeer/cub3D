@@ -1,11 +1,19 @@
 R 1920 1080
-NO ./path_to_the_north_texture
-SO ./path_to_the_south_texture
-WE ./path_to_the_west_texture
-EA ./path_to_the_east_texture
-S ./path_to_the_sprite_texture
+
+NO ~/Downloads/shiro_no_game_no_life_and_1_more__fd397948199128b75e8b789cc95956ce.png
+
+SO ~/Downloads/shiro_no_game_no_life_and_1_more__fd397948199128b75e8b789cc95956ce.png
+
+WE  ~/Downloads/shiro_no_game_no_life_and_1_more__fd397948199128b75e8b789cc95956ce.png
+
+EA ~/Downloads/shiro_no_game_no_life_and_1_more__fd397948199128b75e8b789cc95956ce.png
+
+S ~/Downloads/shiro_no_game_no_life_and_1_more__fd397948199128b75e8b789cc95956ce.png
+
 F 220,100,0
+
 C 225,30,0
+
 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 1 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
 1 0 1 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 2 0 0 0 0 0 1 0 0 0 1

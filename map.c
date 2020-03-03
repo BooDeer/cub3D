@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/02/26 22:28:01 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/02/28 23:18:13 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void		reading_file(int fd)
 	{
 		ret = get_next_line(fd, &line);
 		(line[0] == 'R') ? ft_resolution(line, mapinfo) : 0;
-		if (ret == 1)
+		if (ret == 0)
 			break ;
 	}
 }
