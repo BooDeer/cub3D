@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/03/01 20:48:10 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/03/07 22:56:54 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,18 @@ struct	rays
 
 int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+            {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
             {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
             {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1},
             {1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1},
             {1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-int		*data;
 
 
 
@@ -79,9 +78,14 @@ float	distanceBetweenPoints(float x1, float y1, float x2, float y2)
 
 void 	draw_map(point *pl)
 {
+
 	int x, y;
 	static int check;
-		for (int i = 0; i < MAP_NUM_COLS; i++)
+
+		castallRays(pl);
+	generate3dwalls(pl);
+
+	for (int i = 0; i < MAP_NUM_COLS; i++)
 	{
 		for (int j = 0; j < MAP_NUM_ROWS; j++)
 		{
@@ -91,24 +95,82 @@ void 	draw_map(point *pl)
 			}
 			else if (!map[j][i])
 				draw_square(i * TILE_SIZE * MINIMAP_SCALE,j * TILE_SIZE * MINIMAP_SCALE, TILE_SIZE * MINIMAP_SCALE, 0x000000, pl);
-			else if (!check++)
+			else
 			{
-				x = (i * TILE_SIZE) + TILE_SIZE / 2;
-				y = (j * TILE_SIZE) + TILE_SIZE / 2;
-				pl->x = x;
-				pl->y = y;
-				put_pixel(MINIMAP_SCALE * x,MINIMAP_SCALE * y, 0xffffff, pl->color_buffer_texture);
+				draw_square(i * TILE_SIZE * MINIMAP_SCALE , j * TILE_SIZE * MINIMAP_SCALE, TILE_SIZE * MINIMAP_SCALE, 0x000000, pl);
+				
+				if (!check++)
+				{
+					x = (i * TILE_SIZE) + TILE_SIZE / 2;
+					y = (j * TILE_SIZE) + TILE_SIZE / 2;
+					pl->x = x;
+					pl->y = y;
+					put_pixel(MINIMAP_SCALE * x + cos(pl->rotationAngle),MINIMAP_SCALE * y, 0xffffff + cos(pl->rotationAngle), pl->color_buffer_texture);
+				}
 			}
 			
 		}
-		draw_square(0,0, TILE_SIZE * MINIMAP_SCALE, 0xff, pl);
 
 		// draw_line(pl, pl->x + cos(pl->rotationAngle) * 50, pl->y + sin(pl->rotationAngle) * 50);
 	}
-	castallRays(pl);
+
 	renderRays(pl);
 }
 
+void	find_player(point *pl)
+{
+	int		i;
+	int		j;
+
+	i = -1;
+
+
+	while (++i < MAP_NUM_COLS)
+	{
+
+		j = -1;
+		while (++j < MAP_NUM_ROWS)
+		{
+			if (map[j][i] == 5)
+			{
+				pl->x = (i * TILE_SIZE) + TILE_SIZE / 2;
+				pl->y = (j * TILE_SIZE) + TILE_SIZE / 2;
+			printf("%f <====================> %f\n", pl->x, pl->y);
+				// printf("beeboop\n");
+			}
+		}
+	}
+}
+void	generate3dwalls(point *pl)
+{
+	int		*tmp;
+	int		k;
+	tmp = (int *)mlx_get_data_addr(pl->color_buffer_texture, &k, &k, &k);
+	
+	for (int i = 0; i < NUM_RAYS; i++)
+	{
+		float perpDistance = ray[i].distance * cos(ray[i].rayAngle - pl->rotationAngle);
+		float distanceProjPlane = (WINDOW_WIDTH / 2) / tan(FOV_ANGLE / 2);
+		float projectedWallHeight = (TILE_SIZE / perpDistance) * distanceProjPlane;
+
+		int		wallStripHeight = (int)projectedWallHeight;
+
+		int wallTopPixel = (WINDOW_HEIGHT / 2) - (wallStripHeight / 2);
+		wallTopPixel = wallTopPixel < 0 ? 0 : wallTopPixel;
+
+		int wallBottomPixel = (WINDOW_HEIGHT / 2) + (wallStripHeight / 2);
+		wallBottomPixel = wallBottomPixel > WINDOW_HEIGHT ? WINDOW_HEIGHT : wallBottomPixel;
+
+		for (int y = 0; y < wallTopPixel; y++)
+			tmp[i + (WINDOW_WIDTH * y)] = 0x0000FF;
+		for (int y = wallTopPixel; y < wallBottomPixel; y++)
+			tmp[i + (WINDOW_WIDTH * y)] = ray[i].wasHitVertical ? 0xFFFFFF : 0xFFCCCC;
+		for (int y = wallBottomPixel; y < WINDOW_HEIGHT; y++)
+			tmp[i + (WINDOW_WIDTH * y)] = 0x00000E;
+		
+	
+	}
+}
 void	renderRays(point *pl)
 {
 	for (int i = 0; i < NUM_RAYS; i++)
@@ -249,28 +311,28 @@ int 	move_player(int key, point *pl)
 	{
 		pl->walkDirection = 1;
 	}
-	else if (key == 1)
+	if (key == 1)
 	{
 		pl->walkDirection = -1;
 	}
-	else if (key == 2)
+	if (key == 2)
 	{
 		pl->turnDirection = 1;
 	}
-	else if (key == 0)
+	if (key == 0)
 	{
 		pl->turnDirection = -1;
 	}
-	else if (key == 53)
+	if (key == 53)
 		exit(1);
-	else if (key == 124)
+	if (key == 124)
 		pl->rotationAngle += M_PI / 20;
-	else if (key == 123)
+	if (key == 123)
 		pl->rotationAngle -= M_PI / 20;
 
 	// pl->rotationAngle += pl->turnDirection * pl->turnSpeed;
-	printf("%d\n", pl->turnDirection);
 	moveStep = pl->walkDirection * pl->moveSpeed;
+	
 	pl->x = pl->x + cos(pl->rotationAngle) * moveStep;
 	pl->y = pl->y + sin(pl->rotationAngle) * moveStep;
 	if (Collision(pl->x, pl->y))
@@ -286,6 +348,9 @@ int 	move_player(int key, point *pl)
 	// renderRays(pl);
 	put_pixel(MINIMAP_SCALE * pl->x + cos(pl->rotationAngle),MINIMAP_SCALE * pl->y + sin(pl->rotationAngle), 0xffffff, pl->color_buffer_texture);
 	mlx_put_image_to_window(pl->mlx_ptr, pl->win_ptr, pl->color_buffer_texture, 0, 0);
+
+	// printf("%f <====================> %f\n", ray[0].wallHitX, ray[0].wallHitY);
+
 	return 0;
 }
 
@@ -307,7 +372,6 @@ int		main()
 {
 
 
-	int		a;
 	point pl;
 	// void *img;
 
@@ -316,10 +380,10 @@ int		main()
 	pl.mlx_ptr = mlx_init();
 	pl.win_ptr = mlx_new_window(pl.mlx_ptr,WINDOW_WIDTH, WINDOW_HEIGHT,"bruh");
 	pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WINDOW_WIDTH,WINDOW_HEIGHT);
-	data = (int*)mlx_get_data_addr(pl.color_buffer_texture, &a,&a,&a);
 	struct_init(&pl);
 	draw_map(&pl);
 	// mlx_hook(pl->win_ptr, 2, 0, move_player,&pl);
+	// mlx_hook(pl.win_ptr, 2, 0, move_player,&pl);
 	mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
 	mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
 	mlx_loop(pl.mlx_ptr);

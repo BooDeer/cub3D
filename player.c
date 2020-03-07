@@ -6,16 +6,17 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 11:53:05 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/02/25 16:14:55 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/03/07 22:08:58 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
+
+
 void	struct_init(point *pl)
 {
-	pl->x = 0;
-	pl->y = 0;
+	find_player(pl);
 	pl->radius = 3;
 	pl->turnDirection = 0;
 	pl->walkDirection = 0 ;
@@ -31,15 +32,15 @@ int	reset_player(int key, point *pl)
 	{
 		pl->walkDirection = 0;
 	}
-	else if (key == 1)
+	if (key == 1)
 	{
 		pl->walkDirection = 0;
 	}
-	else if (key == 2)
+	if (key == 2)
 	{
 		pl->turnDirection =0;
 	}
-	else if (key == 0)
+	if (key == 0)
 	{
 		pl->turnDirection = 0;
 	}

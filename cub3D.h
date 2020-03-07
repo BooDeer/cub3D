@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/03/03 07:48:50 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/03/07 21:22:15 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <math.h>
 #include <limits.h>
 
-#define MINIMAP_SCALE 1.0
+#define MINIMAP_SCALE 0.25
 #define MAP_NUM_ROWS 11
 #define MAP_NUM_COLS 15
 #define TILE_SIZE (64 * 2)
@@ -61,6 +61,8 @@ int			reset_player(int key, point *pl);
 void		castallRays(point *pl);
 void		castRayy(float rayAngle, int id, point *pl);
 void		renderRays(point *pl);
+void		generate3dwalls(point *pl);
+void		find_player(point *pl);
 
 
 
