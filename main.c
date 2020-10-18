@@ -6,13 +6,12 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/03/07 22:56:54 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/18 01:26:00 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 #include <stdio.h>
-#include "GNL/get_next_line.h"
 
 
 struct	rays
@@ -45,9 +44,7 @@ int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-
-
-
+/*
 int		Collision(int x, int y)
 {
 	int		indexX;
@@ -58,8 +55,9 @@ int		Collision(int x, int y)
 	if (indexX < 0 || indexX > WINDOW_WIDTH || indexY < 0 || indexY > WINDOW_HEIGHT)
 		return (1);
 	indexX = floor(indexX / TILE_SIZE);	
-	indexY = floor(indexY / TILE_SIZE);	
-	return (map[indexY][indexX] != 0 && map[indexY][indexX] != 5);
+	indexY = floor(indexY / TILE_SIZE);
+	// printf("%d============%d\n", indexX, indexY);
+	return (map[indexY][indexX] == 1);
 }
 
 float	normalizeAngle(float angle)
@@ -76,13 +74,13 @@ float	distanceBetweenPoints(float x1, float y1, float x2, float y2)
 	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }
 
-void 	draw_map(point *pl)
+void 	 draw_map(point *pl)
 {
 
 	int x, y;
 	static int check;
 
-		castallRays(pl);
+	castallRays(pl);
 	generate3dwalls(pl);
 
 	for (int i = 0; i < MAP_NUM_COLS; i++)
@@ -123,30 +121,25 @@ void	find_player(point *pl)
 	int		j;
 
 	i = -1;
-
-
 	while (++i < MAP_NUM_COLS)
 	{
-
 		j = -1;
 		while (++j < MAP_NUM_ROWS)
-		{
 			if (map[j][i] == 5)
 			{
 				pl->x = (i * TILE_SIZE) + TILE_SIZE / 2;
 				pl->y = (j * TILE_SIZE) + TILE_SIZE / 2;
-			printf("%f <====================> %f\n", pl->x, pl->y);
-				// printf("beeboop\n");
+			// printf("%f <====================> %f\n", pl->x, pl->y);
 			}
-		}
 	}
 }
-void	generate3dwalls(point *pl)
+void			generate3dwalls(point *pl)
 {
 	int		*tmp;
 	int		k;
 	tmp = (int *)mlx_get_data_addr(pl->color_buffer_texture, &k, &k, &k);
-	
+	int		textureOffsetX, textureOffsetY;
+
 	for (int i = 0; i < NUM_RAYS; i++)
 	{
 		float perpDistance = ray[i].distance * cos(ray[i].rayAngle - pl->rotationAngle);
@@ -162,9 +155,20 @@ void	generate3dwalls(point *pl)
 		wallBottomPixel = wallBottomPixel > WINDOW_HEIGHT ? WINDOW_HEIGHT : wallBottomPixel;
 
 		for (int y = 0; y < wallTopPixel; y++)
-			tmp[i + (WINDOW_WIDTH * y)] = 0x0000FF;
+			tmp[i + (WINDOW_WIDTH * y)] = 0x0000FF; // abort sometimes
+		
+		if (ray[i].wasHitVertical)
+			textureOffsetX = (int)ray[i].wallHitY % TILE_SIZE;
+		else
+			textureOffsetX = (int)ray[i].wallHitX % TILE_SIZE;
+			
+		
 		for (int y = wallTopPixel; y < wallBottomPixel; y++)
-			tmp[i + (WINDOW_WIDTH * y)] = ray[i].wasHitVertical ? 0xFFFFFF : 0xFFCCCC;
+		{
+			int		distanceFromTop = y +  (wallStripHeight / 2) - (WINDOW_HEIGHT / 2);
+			textureOffsetY = distanceFromTop * ((float)TILE_SIZE / wallStripHeight);
+			tmp[i + (WINDOW_WIDTH * y)] = pl->texture_buffer[textureOffsetX + (textureOffsetY * TILE_SIZE)];
+		}
 		for (int y = wallBottomPixel; y < WINDOW_HEIGHT; y++)
 			tmp[i + (WINDOW_WIDTH * y)] = 0x00000E;
 		
@@ -298,7 +302,7 @@ void	castRayy(float rayAngle, int id, point *pl)
 	ray[id].isRayFacingDown = isRayFacingDown;
 	ray[id].isRayFacingUp = isRayFacingUp;
 	ray[id].isRayFacingRight = isRayFacingRight;
-	ray[id].isRayFacingLeft = isRayFacingLeft;
+	ray[id].isRayFacingLeft = isRayFacingLeft;	
 }
 
 
@@ -307,6 +311,7 @@ int 	move_player(int key, point *pl)
 	float	moveStep, oldPlayerx, oldPlayery;
 	oldPlayerx = pl->x;
 	oldPlayery = pl->y;
+	// printf("====ddddddd==== %d\n", key);
 	if (key == 13)
 	{
 		pl->walkDirection = 1;
@@ -362,29 +367,28 @@ int	close_window(int key)
 
 int		move_p(point *pl)
 {
-	mlx_hook(pl->win_ptr, 2, 0, move_player,pl);
+	mlx_hook(pl->win_ptr, 2, 0, move_player, pl);
 	mlx_hook(pl->win_ptr, 3, 0, reset_player, pl);
 	mlx_hook(pl->win_ptr, 17, 0, close_window, pl);
 	return 0;
 }
-
+	*/
 int		main()
 {
 
-
-	point pl;
+	// point pl;
 	// void *img;
+	// int 	useless;
 
- 	// int fd = open("cube.cub", O_RDONLY);
-	// reading_file(fd);
-	pl.mlx_ptr = mlx_init();
-	pl.win_ptr = mlx_new_window(pl.mlx_ptr,WINDOW_WIDTH, WINDOW_HEIGHT,"bruh");
-	pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WINDOW_WIDTH,WINDOW_HEIGHT);
-	struct_init(&pl);
-	draw_map(&pl);
-	// mlx_hook(pl->win_ptr, 2, 0, move_player,&pl);
-	// mlx_hook(pl.win_ptr, 2, 0, move_player,&pl);
-	mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
-	mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
-	mlx_loop(pl.mlx_ptr);
+	reading_file();
+	// pl.mlx_ptr = mlx_init();
+	// pl.win_ptr = mlx_new_window(pl.mlx_ptr,WINDOW_WIDTH, WINDOW_HEIGHT,"bruh");
+	// pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WINDOW_WIDTH,WINDOW_HEIGHT);
+	// struct_init(&pl);
+	// pl.xpm_picture = mlx_xpm_file_to_image(pl.mlx_ptr, "picture.xpm", &pl.texture_width, &pl.texture_height);
+	// pl.texture_buffer = (int *)mlx_get_data_addr(pl.xpm_picture, &useless, &useless, &useless);
+	// draw_map(&pl);
+	// mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
+	// mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
+	// mlx_loop(pl.mlx_ptr);
 }
