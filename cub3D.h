@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/17 22:51:50 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/18 22:38:33 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ typedef struct	s_list
 	char	*west_texture;
 	char	*east_texture;
 	char	*sprite_texture;
-	int		floor_color;
-	int		ceilling_color;
+	int		floor_color[3];
+	int		ceilling_color[3];
 	
 }				t_mapdata;
 

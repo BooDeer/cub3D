@@ -10,7 +10,7 @@ EA ./picture.xpm
 
 S ./picture.xpm
 
-F 220,100,0
+F 255,100,0
 
 C 225,30,0
 

@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/16 02:49:32 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/19 18:31:04 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 
 void		ft_init(t_mapdata *mapinfo)
 {
-	WIDTH = 0;
-	HEIGHT = 0;
+	WIDTH = -1;
+	HEIGHT = -1;
 	SO = NULL;
 	EA = NULL;
 	WE = NULL;
 	NO = NULL;
 	SP = NULL;
+	F[2] = -1;
+	C[2] = -1;
 }
 
 int			str_isdigit(char *str)
@@ -42,7 +44,7 @@ int			arr_size(char **arr)
 
 	// printf("Test\n");
 	while (arr[++i])
-		printf("=======%s\n=======", arr[i]);
+		;
 	return (i);
 }
 
@@ -63,6 +65,11 @@ int		ft_resolution(char *line, t_mapdata *mapinfo)
 	if (!str_isdigit(arr[1]) || !str_isdigit(arr[2]))
 	{
 		perror("Error.\nthe arguments should only contain positive numbers.\n");
+		return (-1);
+	}
+	if (WIDTH != -1 || HEIGHT != -1)
+	{
+		perror("Error\nan argument is duplicated\n");
 		return (-1);
 	}
 	else
@@ -102,31 +109,46 @@ int		ft_texture(char *line, t_mapdata *mapinfo)
 		if (line[0] == 'S' && line[1] == 'O')
 		{
 			if (SO != NULL)
+			{
+				perror("Error\nan argument is duplicated\n");
 				return (-1);
+			}
 			SO = ft_strdup(arr[1]);
 		}
 		if (line[0] == 'W')
 		{
 			if (WE != NULL)
+			{
+				perror("Error\nan argument is duplicated\n");
 				return (-1);
+			}
 			WE = ft_strdup(arr[1]);
 		}
 		if (line[0] == 'E')
 		{
 			if (EA != NULL)
+			{
+				perror("Error\nan argument is duplicated\n");
 				return (-1);
+			}
 			EA = ft_strdup(arr[1]);
 		}
 		if (line[0] == 'N')
 		{
 			if (NO != NULL)
+			{
+				perror("Error\nan argument is duplicated\n");
 				return (-1);
+			};
 			NO = ft_strdup(arr[1]);
 		}
-		if (line[0] == 'S')
+		if (line[0] == 'S' && line[1] != 'O')
 		{
 			if (SP != NULL)
+			{
+				perror("Error\nan argument is duplicated\n");
 				return (-1);
+			}
 			SP = ft_strdup(arr[1]);
 		}
 	}
@@ -172,28 +194,72 @@ int			check_color_parametre(char *param) // F                256qd,   0 0, -250
 	
 }
 
-// int			ft_color_value(char *line, t_mapdata *mapinfo)
-// {
-// 	char	**arr;
-// 	int		i;
-	
-// 	i = -1;
-// 	if ((line[0] == 'F' || line [0] == 'C') && line[1] != ' ')
-// 	{
-// 		perror("Error.\nNo space after the color parametre.\n");
-// 		return (-1);
-// 	}
-// 	else
-// 	{
-// 		arr = ft_split(&line[1], ',');
-// 		while (arr[++i])
-// 		{
-// 			if (check_color_parametre(arr[i]))
+int			fill_color_values(char **arr, t_mapdata *mapinfo, int f_or_c)
+{
+	int		tmp;
+	int		i;
 
-// 		}
-// 	}
-// 	return (0);
-// }
+	i = -1;
+	while (++i < 3)
+	{
+		tmp = ft_atoi(arr[i]);
+		if (tmp > 255 || tmp < 0)
+		{
+			perror("Error\nColor values should be between 0 and 255\n");
+			return (-1);
+		}
+		if (f_or_c == 70)
+		{
+			if (F[2] != -1)
+			{
+				perror("Error\nan argument is duplicated\n");
+				return (-1);
+			}
+			mapinfo->floor_color[i] = tmp;
+		}
+		else
+		{
+			if (C[2] != -1)
+			{
+				perror("Error\nan argument is duplicated\n");
+				return (-1);
+			}
+			mapinfo->ceilling_color[i] = tmp;
+		}
+	}
+	return (0);
+}
+
+int			ft_color_value(char *line, t_mapdata *mapinfo)
+{
+	char	**arr;
+	int		i;
+	
+	i = -1;
+	if ((line[0] == 'F' || line [0] == 'C') && line[1] != ' ')
+	{
+		perror("Error.\nNo space after the color parametre.\n");
+		return (-1);
+	}
+	else
+	{
+		arr = ft_split(&line[1], ',');
+		while (arr[++i])
+		{
+			if (check_color_parametre(arr[i]))
+				perror("Error.\nColor parametre contains non-numeric characters\n");
+			else
+				if (fill_color_values(arr, mapinfo, line[0]))
+				{
+					while(i)
+						free(arr[i--]);
+					free(arr);
+					return (-1);
+				}
+		}
+	}
+	return (0);
+}
 
 void		reading_file(void)
 {
@@ -236,11 +302,13 @@ void		reading_file(void)
 		if (line[i] == 'S' && line[i + 1] == ' ')
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		// if (line[i] == 'F' && line[i + 1] == ' ')
-		// 	(ft_color_value(&line[i], mapinfo))? free_struct(mapinfo, line) : 0;
+		if ((line[i] == 'F' || line [i] == 'C')&& line[i + 1] == ' ')
+			if (ft_color_value(&line[i], mapinfo))
+				return free_struct(mapinfo, line);
 		if (ret == 0)
 			break ;
 	}
+	printf("%d\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%d\n", mapinfo->width, mapinfo->height, mapinfo->north_texture, mapinfo->south_texture, mapinfo->west_texture, mapinfo->east_texture, mapinfo->sprite_texture, mapinfo->ceilling_color[2], mapinfo->floor_color[2]);
 	free(line);
 	close(fd);
 }
