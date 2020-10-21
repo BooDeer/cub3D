@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/19 18:31:04 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/21 17:43:12 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,15 +194,12 @@ int			check_color_parametre(char *param) // F                256qd,   0 0, -250
 	
 }
 
-int			fill_color_values(char **arr, t_mapdata *mapinfo, int f_or_c)
+int			fill_color_values(char *arr, t_mapdata *mapinfo, int f_or_c, int i)
 {
 	int		tmp;
-	int		i;
 
-	i = -1;
-	while (++i < 3)
-	{
-		tmp = ft_atoi(arr[i]);
+
+		tmp = ft_atoi(arr);
 		if (tmp > 255 || tmp < 0)
 		{
 			perror("Error\nColor values should be between 0 and 255\n");
@@ -226,7 +223,6 @@ int			fill_color_values(char **arr, t_mapdata *mapinfo, int f_or_c)
 			}
 			mapinfo->ceilling_color[i] = tmp;
 		}
-	}
 	return (0);
 }
 
@@ -244,12 +240,17 @@ int			ft_color_value(char *line, t_mapdata *mapinfo)
 	else
 	{
 		arr = ft_split(&line[1], ',');
+		if (arr_size(arr) != 3)
+		{
+			perror("Error.\nwrong number of arguments.\n");
+			return (-1);		
+		}
 		while (arr[++i])
 		{
 			if (check_color_parametre(arr[i]))
 				perror("Error.\nColor parametre contains non-numeric characters\n");
 			else
-				if (fill_color_values(arr, mapinfo, line[0]))
+				if (fill_color_values(arr[i], mapinfo, line[0], i))
 				{
 					while(i)
 						free(arr[i--]);
@@ -261,6 +262,11 @@ int			ft_color_value(char *line, t_mapdata *mapinfo)
 	return (0);
 }
 
+int			ft_read_map(char *line, t_mapdata *mapinfo)
+{
+		
+}
+
 void		reading_file(void)
 {
 	char		*line;
@@ -268,8 +274,10 @@ void		reading_file(void)
 	int			fd;
 	t_mapdata 	*mapinfo;
 	int			i;
+	int			param;
 
 	i = 0;
+	param = 0;
 	fd = open("cube.cub", O_RDONLY);
 	if (fd == -1)
 	{
@@ -284,29 +292,37 @@ void		reading_file(void)
 	{
 		while(line[i] == ' ')
 			i++;
-		if (line[i] == 'R')
+		if (line[i] == 'R' && ++param)
 			if (ft_resolution(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'S' && line[i + 1] == 'O')
+		if (line[i] == 'S' && line[i + 1] == 'O' && ++param)
 			if (ft_texture(&line[i], mapinfo))
 			return free_struct(mapinfo, line);
-		if (line[i] == 'N' && line[i + 1] == 'O')
+		if (line[i] == 'N' && line[i + 1] == 'O' && ++param)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'E' && line[i + 1] == 'A')
+		if (line[i] == 'E' && line[i + 1] == 'A' && ++param)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'W' && line[i + 1] == 'E')
+		if (line[i] == 'W' && line[i + 1] == 'E' && ++param)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'S' && line[i + 1] == ' ')
+		if (line[i] == 'S' && line[i + 1] == ' ' && ++param)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if ((line[i] == 'F' || line [i] == 'C')&& line[i + 1] == ' ')
+		if ((line[i] == 'F' || line [i] == 'C')&& line[i + 1] == ' ' && ++param)
 			if (ft_color_value(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
+		if (line[i] == 1 && param == 8)
+			if (ft_read_map(line, mapinfo))
+				return (free_struct(mapinfo, line));
+		
 		if (ret == 0)
 			break ;
+	}
+	if (++param != 8)
+	{
+		perror("ERORORORORORO\n");
 	}
 	printf("%d\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%d\n", mapinfo->width, mapinfo->height, mapinfo->north_texture, mapinfo->south_texture, mapinfo->west_texture, mapinfo->east_texture, mapinfo->sprite_texture, mapinfo->ceilling_color[2], mapinfo->floor_color[2]);
 	free(line);
