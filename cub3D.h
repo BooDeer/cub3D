@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/18 22:38:33 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/22 19:39:21 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@
 #define SP mapinfo->sprite_texture
 #define F mapinfo->floor_color
 #define C mapinfo->ceilling_color
+#define	MAP_R mapinfo->map_reader
+#define MAP mapinfo->map
+#define	MFR mapinfo->map_first_read
 
 typedef struct	s_list
 {
@@ -50,7 +53,9 @@ typedef struct	s_list
 	char	*sprite_texture;
 	int		floor_color[3];
 	int		ceilling_color[3];
-	
+	char	*map_reader;
+	char	**map;
+	int		map_first_read;
 }				t_mapdata;
 
 

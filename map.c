@@ -6,13 +6,25 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/21 17:43:12 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/22 20:03:46 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 #include "GNL/get_next_line.h"
 
+
+size_t		ft_strlen2(char *s)
+{
+	size_t		i;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i] != '\0' && s[i] != '\n')
+		i++;
+	return (i);
+}
 void		ft_init(t_mapdata *mapinfo)
 {
 	WIDTH = -1;
@@ -24,6 +36,8 @@ void		ft_init(t_mapdata *mapinfo)
 	SP = NULL;
 	F[2] = -1;
 	C[2] = -1;
+	MAP_R = ft_strdup("");
+	MFR = 0;
 }
 
 int			str_isdigit(char *str)
@@ -264,7 +278,64 @@ int			ft_color_value(char *line, t_mapdata *mapinfo)
 
 int			ft_read_map(char *line, t_mapdata *mapinfo)
 {
-		
+	char *tmp;
+	if (!MFR)
+		MFR = 1;
+	printf("Hehe hoho I am here now\n");
+	if (line[ft_strlen2(line) - 1] != '1' && line[ft_strlen2(line) - 1] != ' ')
+	{
+		perror("Error\nmap is not closed\n");
+		return (1);
+	}
+	tmp = MAP_R;
+	MAP_R = ft_strjoin(MAP_R, line);
+	free(tmp);
+	tmp = MAP_R;
+	MAP_R = ft_strjoin(MAP_R, "\n");
+	free(tmp);
+	return (0);
+}
+
+int			ft_check_map(t_mapdata *mapinfo)
+{
+	int		i;
+	int		j;
+	
+	i = -1;
+	
+	while (MAP[++i])
+	{
+		j = 0;
+		while (MAP[i][j])
+		{
+			if (i == 0)
+				if (MAP[i][j] != ' ' && MAP[i][j] != '1')
+				{
+					printf("%d===========\n", MAP[i][j]);
+					perror("Error\nmap not closed\n");
+					return (1);
+				}
+			if (MAP[i][j] == '0' || MAP[i][j] == '2' || MAP[i][j] == 'N' || MAP[i][j] == 'E' || MAP[i][j] == 'W' ||  MAP[i][j] == 'S' )
+			{
+				if (MAP[i - 1][j] == ' ' || MAP[i - 1][j] == '\0' || MAP[i + 1][j] == ' ' || MAP[i + 1][j] == '\0' || MAP[i][j - 1] == ' ' || MAP[i][j - 1] == '\0' ||
+					MAP[i][j + 1] == '\0' || MAP[i][j + 1] == ' ')
+				{
+					perror("Error\nthe map is not closed\n");
+					return (1);
+				}
+			}
+			j++;
+		}
+	}
+	return (0);
+}
+
+int			ft_fill_map(t_mapdata *mapinfo)
+{
+	MAP = ft_split(MAP_R, '\n');
+	if (ft_check_map(mapinfo))
+		return (1);
+	return (0);
 }
 
 void		reading_file(void)
@@ -288,9 +359,12 @@ void		reading_file(void)
 	if (!mapinfo)
 		return ;
 	ft_init(mapinfo);
-	while ((ret = get_next_line(fd, &line)))
+	while (1)
 	{
-		while(line[i] == ' ')
+		if (param == 8)
+			param++;
+		(ret = get_next_line(fd, &line));
+		while(line[i] == ' ' && param != 9)
 			i++;
 		if (line[i] == 'R' && ++param)
 			if (ft_resolution(&line[i], mapinfo))
@@ -313,18 +387,25 @@ void		reading_file(void)
 		if ((line[i] == 'F' || line [i] == 'C')&& line[i + 1] == ' ' && ++param)
 			if (ft_color_value(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 1 && param == 8)
+		if ((line[i] == '1' || line[i] == ' ')&& param == 9)
+		{
 			if (ft_read_map(line, mapinfo))
 				return (free_struct(mapinfo, line));
+		}
+		else if (MFR && ((ft_strchr("NWSE 02", line[i]) && line[i] != '\0') || (line[0] != ' ' && line[0] != '1')))
+		{
+			perror("Error\nan error in the map occured, please check the map\n");
+			return (free_struct(mapinfo, line));
+		}
 		
 		if (ret == 0)
 			break ;
 	}
-	if (++param != 8)
-	{
-		perror("ERORORORORORO\n");
-	}
+	if (ft_fill_map(mapinfo))
+		return (free_struct(mapinfo, line));
+	printf("%s\n", MAP_R);
 	printf("%d\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%d\n", mapinfo->width, mapinfo->height, mapinfo->north_texture, mapinfo->south_texture, mapinfo->west_texture, mapinfo->east_texture, mapinfo->sprite_texture, mapinfo->ceilling_color[2], mapinfo->floor_color[2]);
 	free(line);
 	close(fd);
+	printf("%c===%c\n", MAP[0][0], MAP[5][3]);
 }

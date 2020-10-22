@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/21 17:52:34 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/21 18:43:45 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
-
 /*
+
 int		Collision(int x, int y)
 {
 	int		indexX;
@@ -372,7 +372,6 @@ int		move_p(point *pl)
 	mlx_hook(pl->win_ptr, 17, 0, close_window, pl);
 	return 0;
 }
-
 */
 int		main()
 {
@@ -382,15 +381,15 @@ int		main()
 	// int 	useless;
 
 	reading_file();
-		// pl.mlx_ptr = mlx_init();
-		// pl.win_ptr = mlx_new_window(pl.mlx_ptr,WINDOW_WIDTH, WINDOW_HEIGHT,"bruh");
-		// pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WINDOW_WIDTH,WINDOW_HEIGHT);
-		// struct_init(&pl);
-		// pl.xpm_picture = mlx_xpm_file_to_image(pl.mlx_ptr, "picture.xpm", &pl.texture_width, &pl.texture_height);
-		// printf("%d===========%d\n", pl.texture_width, pl.texture_height);
-		// pl.texture_buffer = (int *)mlx_get_data_addr(pl.xpm_picture, &useless, &useless, &useless);
-		// draw_map(&pl);
-		// mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
-		// mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
-		// mlx_loop(pl.mlx_ptr);
+	// 	pl.mlx_ptr = mlx_init();
+	// 	pl.win_ptr = mlx_new_window(pl.mlx_ptr,WINDOW_WIDTH, WINDOW_HEIGHT,"bruh");
+	// 	pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WINDOW_WIDTH,WINDOW_HEIGHT);
+	// 	struct_init(&pl);
+	// 	pl.xpm_picture = mlx_xpm_file_to_image(pl.mlx_ptr, "picture.xpm", &pl.texture_width, &pl.texture_height);
+	// 	printf("%d===========%d\n", pl.texture_width, pl.texture_height);
+	// 	pl.texture_buffer = (int *)mlx_get_data_addr(pl.xpm_picture, &useless, &useless, &useless);
+	// 	draw_map(&pl);
+	// 	mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
+	// 	mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
+	// 	mlx_loop(pl.mlx_ptr);
 }
