@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/22 20:03:46 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/23 02:54:52 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void		ft_init(t_mapdata *mapinfo)
 	C[2] = -1;
 	MAP_R = ft_strdup("");
 	MFR = 0;
+	CP = 0;
 }
 
 int			str_isdigit(char *str)
@@ -308,6 +309,11 @@ int			ft_check_map(t_mapdata *mapinfo)
 		j = 0;
 		while (MAP[i][j])
 		{
+			if (CP)
+			{
+				perror("Error\nThere's more than one player in the map\n");
+				return (1);
+			}
 			if (i == 0)
 				if (MAP[i][j] != ' ' && MAP[i][j] != '1')
 				{
@@ -323,9 +329,17 @@ int			ft_check_map(t_mapdata *mapinfo)
 					perror("Error\nthe map is not closed\n");
 					return (1);
 				}
+				if (ft_isalpha(MAP[i][j]))
+					CP = 1;
 			}
 			j++;
 		}
+	}
+
+	if (!CP)
+	{
+		perror("Error\nThere's no player in the map\n");
+		return (1);
 	}
 	return (0);
 }
@@ -400,6 +414,11 @@ void		reading_file(void)
 		
 		if (ret == 0)
 			break ;
+	}
+	if (MAP_R == '\0')
+	{
+		perror("Error\nThere's no map\n");
+		return (free_struct(mapinfo, line));
 	}
 	if (ft_fill_map(mapinfo))
 		return (free_struct(mapinfo, line));

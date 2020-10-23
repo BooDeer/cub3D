@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/21 18:43:45 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/23 03:33:08 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
-/*
+
 
 int		Collision(int x, int y)
 {
@@ -158,16 +158,16 @@ void			generate3dwalls(point *pl)
 			tmp[i + (WINDOW_WIDTH * y)] = 0x0000FF; // abort sometimes
 		
 		if (ray[i].wasHitVertical)
-			textureOffsetX = (int)ray[i].wallHitY % TILE_SIZE;
+			textureOffsetX = (int)ray[i].wallHitY % pl->texture_width;
 		else
-			textureOffsetX = (int)ray[i].wallHitX % TILE_SIZE;
+			textureOffsetX = (int)ray[i].wallHitX % pl->texture_width;
 			
 		
 		for (int y = wallTopPixel; y < wallBottomPixel; y++)
 		{
 			int		distanceFromTop = y +  (wallStripHeight / 2) - (WINDOW_HEIGHT / 2);
-			textureOffsetY = distanceFromTop * ((float)TILE_SIZE / wallStripHeight);
-			tmp[i + (WINDOW_WIDTH * y)] = pl->texture_buffer[textureOffsetX + (textureOffsetY * TILE_SIZE)];
+			textureOffsetY = distanceFromTop * ((float)pl->texture_height / wallStripHeight);
+			tmp[i + (WINDOW_WIDTH * y)] = pl->texture_buffer[textureOffsetX + (textureOffsetY * pl->texture_width)];
 		}
 		for (int y = wallBottomPixel; y < WINDOW_HEIGHT; y++)
 			tmp[i + (WINDOW_WIDTH * y)] = 0x00000E;
@@ -372,24 +372,24 @@ int		move_p(point *pl)
 	mlx_hook(pl->win_ptr, 17, 0, close_window, pl);
 	return 0;
 }
-*/
+
 int		main()
 {
 
-	// point pl;
-	// void *img;
-	// int 	useless;
+	point pl;
+	void *img;
+	int 	useless;
 
-	reading_file();
-	// 	pl.mlx_ptr = mlx_init();
-	// 	pl.win_ptr = mlx_new_window(pl.mlx_ptr,WINDOW_WIDTH, WINDOW_HEIGHT,"bruh");
-	// 	pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WINDOW_WIDTH,WINDOW_HEIGHT);
-	// 	struct_init(&pl);
-	// 	pl.xpm_picture = mlx_xpm_file_to_image(pl.mlx_ptr, "picture.xpm", &pl.texture_width, &pl.texture_height);
-	// 	printf("%d===========%d\n", pl.texture_width, pl.texture_height);
-	// 	pl.texture_buffer = (int *)mlx_get_data_addr(pl.xpm_picture, &useless, &useless, &useless);
-	// 	draw_map(&pl);
-	// 	mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
-	// 	mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
-	// 	mlx_loop(pl.mlx_ptr);
+	// reading_file();
+		pl.mlx_ptr = mlx_init();
+		pl.win_ptr = mlx_new_window(pl.mlx_ptr,WINDOW_WIDTH, WINDOW_HEIGHT,"bruh");
+		pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WINDOW_WIDTH,WINDOW_HEIGHT);
+		struct_init(&pl);
+		pl.xpm_picture = mlx_xpm_file_to_image(pl.mlx_ptr, "picture_2.xpm", &pl.texture_width, &pl.texture_height);
+		printf("%d===========%d\n", pl.texture_width, pl.texture_height);
+		pl.texture_buffer = (int *)mlx_get_data_addr(pl.xpm_picture, &useless, &useless, &useless);
+		draw_map(&pl);
+		mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
+		mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
+		mlx_loop(pl.mlx_ptr);
 }

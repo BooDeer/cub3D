@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/22 19:39:21 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/23 00:50:28 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@
 #define	MAP_R mapinfo->map_reader
 #define MAP mapinfo->map
 #define	MFR mapinfo->map_first_read
+#define	CP mapinfo->check_player
 
 typedef struct	s_list
 {
@@ -56,6 +57,7 @@ typedef struct	s_list
 	char	*map_reader;
 	char	**map;
 	int		map_first_read;
+	int		check_player;
 }				t_mapdata;
 
 
