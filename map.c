@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/23 02:54:52 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/24 23:08:32 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ int		ft_resolution(char *line, t_mapdata *mapinfo)
 	free(arr);
 	(WIDTH >= 2560) ? WIDTH = 2560 : WIDTH;
 	(HEIGHT >= 1440) ? HEIGHT = 1440 : WIDTH;
+	(WIDTH < 10) ? WIDTH = 10 : WIDTH;
+	(HEIGHT < 10) ? HEIGHT = 10 : HEIGHT;
 	return (0);
 }
 
@@ -309,22 +311,22 @@ int			ft_check_map(t_mapdata *mapinfo)
 		j = 0;
 		while (MAP[i][j])
 		{
-			if (CP)
-			{
-				perror("Error\nThere's more than one player in the map\n");
-				return (1);
-			}
+			// if (CP)
+			// {
+			// 	perror("Error\nThere's more than one player in the map\n");
+			// 	return (1);
+			// }
 			if (i == 0)
 				if (MAP[i][j] != ' ' && MAP[i][j] != '1')
 				{
-					printf("%d===========\n", MAP[i][j]);
 					perror("Error\nmap not closed\n");
 					return (1);
 				}
 			if (MAP[i][j] == '0' || MAP[i][j] == '2' || MAP[i][j] == 'N' || MAP[i][j] == 'E' || MAP[i][j] == 'W' ||  MAP[i][j] == 'S' )
 			{
-				if (MAP[i - 1][j] == ' ' || MAP[i - 1][j] == '\0' || MAP[i + 1][j] == ' ' || MAP[i + 1][j] == '\0' || MAP[i][j - 1] == ' ' || MAP[i][j - 1] == '\0' ||
-					MAP[i][j + 1] == '\0' || MAP[i][j + 1] == ' ')
+				if ((!ft_strchr("120NEWS",MAP[i - 1][j]) || !ft_strchr("120NEWS",MAP[i + 1][j]) ||
+				!ft_strchr("120NEWS",MAP[i][j - 1])|| !ft_strchr("120NEWS",MAP[i][j + 1])) || (ft_strlen(MAP[i - 1]) <
+				ft_strlen(MAP[i]) || ft_strlen(MAP[i + 1]) < ft_strlen(MAP[i])))
 				{
 					perror("Error\nthe map is not closed\n");
 					return (1);
