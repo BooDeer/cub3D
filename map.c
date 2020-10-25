@@ -6,13 +6,16 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/24 23:08:32 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/25 18:24:05 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 #include "GNL/get_next_line.h"
 
+
+//TODO: change every two lines that includes perror and
+// 		a return statement by a function to save some space
 
 size_t		ft_strlen2(char *s)
 {
@@ -311,11 +314,11 @@ int			ft_check_map(t_mapdata *mapinfo)
 		j = 0;
 		while (MAP[i][j])
 		{
-			// if (CP)
-			// {
-			// 	perror("Error\nThere's more than one player in the map\n");
-			// 	return (1);
-			// }
+			if (CP && ft_strchr("NEWS", MAP[i][j]))
+			{
+				perror("Error\nThere's more than one player in the map\n");
+				return (1);
+			}
 			if (i == 0)
 				if (MAP[i][j] != ' ' && MAP[i][j] != '1')
 				{
@@ -325,11 +328,15 @@ int			ft_check_map(t_mapdata *mapinfo)
 			if (MAP[i][j] == '0' || MAP[i][j] == '2' || MAP[i][j] == 'N' || MAP[i][j] == 'E' || MAP[i][j] == 'W' ||  MAP[i][j] == 'S' )
 			{
 				if ((!ft_strchr("120NEWS",MAP[i - 1][j]) || !ft_strchr("120NEWS",MAP[i + 1][j]) ||
-				!ft_strchr("120NEWS",MAP[i][j - 1])|| !ft_strchr("120NEWS",MAP[i][j + 1])) || (ft_strlen(MAP[i - 1]) <
-				ft_strlen(MAP[i]) || ft_strlen(MAP[i + 1]) < ft_strlen(MAP[i])))
+				!ft_strchr("120NEWS",MAP[i][j - 1])|| !ft_strchr("120NEWS",MAP[i][j + 1])))
+				{
+					perror("Error\nthe map is not closed or it includes a wrong character\n");
+					return (1);
+				}
+				if ((ft_strlen(MAP[i - 1]) - 1 < j) || ft_strlen(MAP[i + 1]) - 1 < j)
 				{
 					perror("Error\nthe map is not closed\n");
-					return (1);
+					return (1);				
 				}
 				if (ft_isalpha(MAP[i][j]))
 					CP = 1;
@@ -403,17 +410,26 @@ void		reading_file(void)
 		if ((line[i] == 'F' || line [i] == 'C')&& line[i + 1] == ' ' && ++param)
 			if (ft_color_value(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if ((line[i] == '1' || line[i] == ' ')&& param == 9)
+		if ((line[i] == '1' || line[i] == ' '))
 		{
 			if (ft_read_map(line, mapinfo))
 				return (free_struct(mapinfo, line));
 		}
-		else if (MFR && ((ft_strchr("NWSE 02", line[i]) && line[i] != '\0') || (line[0] != ' ' && line[0] != '1')))
+		else if (MFR && param != 9)
 		{
-			perror("Error\nan error in the map occured, please check the map\n");
+			perror("Error\nthe map should be the last element of the file\n");
 			return (free_struct(mapinfo, line));
 		}
-		
+		else if (MFR && param != 9)
+		{
+			perror("Error\nThe map should be the last element of the file\n");
+			return (free_struct(mapinfo, line));
+		}
+		else if (MFR && ((ft_strchr("NWSE 02", line[i]) && line[i] != '\0') || (line[0] != ' ' && line[0] != '1')))
+		{
+			perror("Error\nempty line after the map\n");
+			return (free_struct(mapinfo, line));
+		}
 		if (ret == 0)
 			break ;
 	}
