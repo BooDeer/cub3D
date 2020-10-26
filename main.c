@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/25 17:55:47 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/26 23:17:34 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,27 +28,26 @@ struct	rays
 	int		wallHitContent;
 	
 }	ray[NUM_RAYS];
+
 double	f_mod(double a, double b)
 {
 	return (a - (floor(a/b) * b));
 }
 
-int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-            {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-            {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1},
-            {1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1},
-            {1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1},
-            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1},
-            {1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
-            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-};
-
-
-
+// int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
+// 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+//             {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+//             {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+//             {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1},
+//             {1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1},
+//             {1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1},
+//             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1},
+//             {1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
+//             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+// };
+/*
 int		Collision(int x, int y)
 {
 	int		indexX;
@@ -61,7 +60,7 @@ int		Collision(int x, int y)
 	indexX = floor(indexX / TILE_SIZE);	
 	indexY = floor(indexY / TILE_SIZE);
 	// printf("%d============%d\n", indexX, indexY);
-	return (map[indexY][indexX] == 1);
+	return (MAP[indexY][indexX] == 1);
 }
 
 float	normalizeAngle(float angle)
@@ -77,8 +76,8 @@ float	distanceBetweenPoints(float x1, float y1, float x2, float y2)
 {
 	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }
-
-void 	 draw_map(point *pl)
+*/
+void 	 draw_map(point *pl, t_mapdata *mapinfo)
 {
 
 	int x, y;
@@ -87,15 +86,15 @@ void 	 draw_map(point *pl)
 	castallRays(pl);
 	generate3dwalls(pl);
 
-	for (int i = 0; i < MAP_NUM_COLS; i++)
+	for (int i = 0;  MAP[i]; i++)
 	{
-		for (int j = 0; j < MAP_NUM_ROWS; j++)
+		for (int j = 0; MAP[i][j];j++)
 		{
-			if(map[j][i] == 1)
+			if(MAP[i][j] == 1)
 			{
 				draw_square(i * TILE_SIZE * MINIMAP_SCALE,j * TILE_SIZE * MINIMAP_SCALE, TILE_SIZE * MINIMAP_SCALE, 0xff, pl);
 			}
-			else if (!map[j][i])
+			else if (!MAP[i][j])
 				draw_square(i * TILE_SIZE * MINIMAP_SCALE,j * TILE_SIZE * MINIMAP_SCALE, TILE_SIZE * MINIMAP_SCALE, 0x000000, pl);
 			else
 			{
@@ -116,20 +115,20 @@ void 	 draw_map(point *pl)
 		// draw_line(pl, pl->x + cos(pl->rotationAngle) * 50, pl->y + sin(pl->rotationAngle) * 50);
 	}
 
-	renderRays(pl);
+	// renderRays(pl);
 }
-
+/*
 void	find_player(point *pl)
 {
 	int		i;
 	int		j;
 
 	i = -1;
-	while (++i < MAP_NUM_COLS)
+	while (MAP[++i])
 	{
 		j = -1;
 		while (++j < MAP_NUM_ROWS)
-			if (map[j][i] == 5)
+			if (MAP[i][++j])
 			{
 				pl->x = (i * TILE_SIZE) + TILE_SIZE / 2;
 				pl->y = (j * TILE_SIZE) + TILE_SIZE / 2;
@@ -228,7 +227,7 @@ void	castRayy(float rayAngle, int id, point *pl)
 		{
 			horzWallHitX = nextHorzTouchX;
 			horzWallHitY = nextHorzTouchY;
-			horzWallContent = map[(int)floor(yToCheck / TILE_SIZE)][(int)floor(xToCheck / TILE_SIZE)];
+			horzWallContent = MAP[(int)floor(yToCheck / TILE_SIZE)][(int)floor(xToCheck / TILE_SIZE)];
 			foundHorzWallHit = 1;
 			break;
 		}
@@ -275,7 +274,7 @@ void	castRayy(float rayAngle, int id, point *pl)
 		{
 			VertWallHitX = nextVertTouchX;
 			VertWallHitY = nextVertTouchY;
-			VertWallContent = map[(int)floor(yToCheck / TILE_SIZE)][(int)floor(xToCheck / TILE_SIZE)];
+			VertWallContent = MAP[(int)floor(yToCheck / TILE_SIZE)][(int)floor(xToCheck / TILE_SIZE)];
 			foundVertWallHit = 1;
 			break;
 		}
@@ -380,24 +379,28 @@ int		move_p(point *pl)
 	return 0;
 }
 
-
+*/
 int		main()
 {
 
 	point pl;
 	void *img;
 	int 	useless;
-
-	// reading_file();
-		pl.mlx_ptr = mlx_init();
-		pl.win_ptr = mlx_new_window(pl.mlx_ptr,WINDOW_WIDTH, WINDOW_HEIGHT,"bruh");
-		pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WINDOW_WIDTH,WINDOW_HEIGHT);
-		struct_init(&pl);
-		pl.xpm_picture = mlx_xpm_file_to_image(pl.mlx_ptr, "picture_3.xpm", &pl.texture_width, &pl.texture_height);
-		printf("%d===========%d\n", pl.texture_width, pl.texture_height);
-		pl.texture_buffer = (int *)mlx_get_data_addr(pl.xpm_picture, &useless, &useless, &useless);
-		draw_map(&pl);
-		mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
-		mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
-		mlx_loop(pl.mlx_ptr);
+    t_mapdata   *mapinfo;
+	mapinfo = malloc(sizeof(t_mapdata));
+	if (!mapinfo)
+		return (-1);
+	ft_init(mapinfo);
+	reading_file(mapinfo);
+    printf("%d=====================%d\n", WIDTH,HEIGHT);
+    pl.mlx_ptr = mlx_init();
+    pl.win_ptr = mlx_new_window(pl.mlx_ptr, WIDTH, HEIGHT,"bruh");
+    pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WIDTH,HEIGHT);
+    struct_init(&pl);
+    pl.xpm_picture = mlx_xpm_file_to_image(pl.mlx_ptr, "picture_3.xpm", &pl.texture_width, &pl.texture_height);
+    pl.texture_buffer = (int *)mlx_get_data_addr(pl.xpm_picture, &useless, &useless, &useless);
+    draw_map(&pl, mapinfo);
+    // mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
+    mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
+    mlx_loop(pl.mlx_ptr);
 }

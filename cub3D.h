@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/23 18:42:15 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/26 23:09:16 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ typedef struct player
 }	point;
 
 void		put_pixel(int x, int y, int color, void *img);
-void		reading_file(void);
+void		reading_file(t_mapdata *mapinfo);
 void		struct_init(point *pl);
 void		draw_square(int x, int y,int width,int color, point *pl);
 void		draw_line(point *pl, int x1, int y1);
@@ -94,7 +94,7 @@ void		generate3dwalls(point *pl);
 void		find_player(point *pl);
 int			arr_size(char **arr);
 int 		move_player(int key, point *pl);
-
+void		ft_init(t_mapdata *mapinfo);
 
 
 

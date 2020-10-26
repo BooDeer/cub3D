@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/25 18:24:05 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/26 23:07:40 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,12 +361,11 @@ int			ft_fill_map(t_mapdata *mapinfo)
 	return (0);
 }
 
-void		reading_file(void)
+void		reading_file(t_mapdata *mapinfo)
 {
 	char		*line;
 	int			ret;
 	int			fd;
-	t_mapdata 	*mapinfo;
 	int			i;
 	int			param;
 
@@ -378,10 +377,7 @@ void		reading_file(void)
 		perror("This file descriptor doesn't exist\n");
 		return ;
 	}
-	mapinfo = malloc(sizeof(t_mapdata));
-	if (!mapinfo)
-		return ;
-	ft_init(mapinfo);
+
 	while (1)
 	{
 		if (param == 8)
@@ -392,26 +388,37 @@ void		reading_file(void)
 		if (line[i] == 'R' && ++param)
 			if (ft_resolution(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'S' && line[i + 1] == 'O' && ++param)
+		if (line[i] == 'S' && line[i + 1] == 'O' && ++param < 8)
 			if (ft_texture(&line[i], mapinfo))
 			return free_struct(mapinfo, line);
-		if (line[i] == 'N' && line[i + 1] == 'O' && ++param)
+		if (line[i] == 'N' && line[i + 1] == 'O' && ++param < 8)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'E' && line[i + 1] == 'A' && ++param)
+		if (line[i] == 'E' && line[i + 1] == 'A' && ++param < 8)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'W' && line[i + 1] == 'E' && ++param)
+		if (line[i] == 'W' && line[i + 1] == 'E' && ++param < 8)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'S' && line[i + 1] == ' ' && ++param)
+		if (line[i] == 'S' && line[i + 1] == ' ' && ++param < 8)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if ((line[i] == 'F' || line [i] == 'C')&& line[i + 1] == ' ' && ++param)
+		if ((line[i] == 'F' || line [i] == 'C')	&& ++param < 8)
 			if (ft_color_value(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
+
+		if (!ft_strchr("1 ", line[i]) && param > 9 )
+		{
+			perror("Error\nwrong character in the file\n");
+			return (free_struct(mapinfo, line));
+		}
 		if ((line[i] == '1' || line[i] == ' '))
 		{
+			if (param != 9 && MFR)
+			{
+				perror("Error\nthere's a missing argument\n");
+				return (free_struct(mapinfo, line));
+			}
 			if (ft_read_map(line, mapinfo))
 				return (free_struct(mapinfo, line));
 		}
@@ -425,13 +432,18 @@ void		reading_file(void)
 			perror("Error\nThe map should be the last element of the file\n");
 			return (free_struct(mapinfo, line));
 		}
-		else if (MFR && ((ft_strchr("NWSE 02", line[i]) && line[i] != '\0') || (line[0] != ' ' && line[0] != '1')))
+		else if (MFR && line[0] != ' ' && line[0] != '1')
 		{
-			perror("Error\nempty line after the map\n");
+			perror("Error\nThe map should be the last element of the file\n");
 			return (free_struct(mapinfo, line));
 		}
 		if (ret == 0)
 			break ;
+		if (line[i] != '\0' && !ft_strchr("RSNEWSF1C ", line[i]))
+		{
+			perror("Error\nWrong character in the file\n");
+			return (free_struct(mapinfo, line));
+		}
 	}
 	if (MAP_R == '\0')
 	{
@@ -445,4 +457,6 @@ void		reading_file(void)
 	free(line);
 	close(fd);
 	printf("%c===%c\n", MAP[0][0], MAP[5][3]);
+	// while (1)
+	// 	;
 }
