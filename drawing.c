@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 18:29:36 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/26 23:15:59 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/27 19:59:41 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,32 @@ void	put_pixel(int x, int y, int color, void *img)
 {
 	int k;
 	int *tmp;
+	// if (x > WINDOW_WIDTH - 1 || y > WINDOW_HEIGHT - 1 || x < 0 || y < 0)
+	// 	return ;
 	tmp = (int *)mlx_get_data_addr(img, &k, &k, &k);
 	tmp[x + (y * WINDOW_WIDTH)] = color;
 }
 
 void	draw_square(int x, int y,int width,int color, point *pl)
 {
-	int i;
-    int j;
-
-    i = -1;
+	int i = -1, j;
 	while(++i < width)
 	{
 		j = -1;
 		while(++j < width)
 			put_pixel((j + x), (i + y), color, pl->color_buffer_texture);
+			// mlx_pixel_put(_____);
 	}		
+}
+
+
+float	normalizeAngle(float angle)
+{
+	angle = remainder(angle , 2 * M_PI);
+	if (angle < 0)
+		angle += 2 * M_PI;
+	return (angle);
+
 }
 
 void	draw_line(point *pl, int x1,int y1)
@@ -62,16 +72,17 @@ void	draw_line(point *pl, int x1,int y1)
 	}
 }
 
- void	castallRays(point *pl)
+ void	castallRays(point *pl, t_mapdata *mapinfo)
 {
 	float		rayAngle;
 	int			i;
 
 	rayAngle = pl->rotationAngle - (FOV_ANGLE / 2);
 	i = -1;
-	while (++i < NUM_RAYS)
+	while (++i < WIDTH)
 	{
-		castRayy(rayAngle, i, pl);
-		rayAngle += FOV_ANGLE / NUM_RAYS;
+	    rayAngle = normalizeAngle(rayAngle);
+		castRayy(rayAngle, i, pl, mapinfo);
+		rayAngle += FOV_ANGLE / WIDTH;
 	}
 }

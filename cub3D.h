@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/26 23:09:16 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/29 17:54:13 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 #define MINIMAP_SCALE 0.25
 #define MAP_NUM_ROWS 11
-#define MAP_NUM_COLS 15
+#define MAP_NUM_COLS 16
 #define TILE_SIZE 64
 #define WINDOW_WIDTH (TILE_SIZE * MAP_NUM_COLS)
 #define WINDOW_HEIGHT (TILE_SIZE * MAP_NUM_ROWS)
@@ -42,6 +42,12 @@
 #define MAP mapinfo->map
 #define	MFR mapinfo->map_first_read
 #define	CP mapinfo->check_player
+#define MAP_ROWS mapinfo->map_rows
+#define MAP_COLUMNS mapinfo->map_columns
+#define KEY_UP 13
+#define KEY_DOWN 1
+#define KEY_RIGHT 2
+#define KEY_LEFT 0
 
 typedef struct	s_list
 {
@@ -58,8 +64,23 @@ typedef struct	s_list
 	char	**map;
 	int		map_first_read;
 	int		check_player;
+    int     map_rows;
+    int     map_columns;
 }				t_mapdata;
-
+typedef struct	s_rays
+{
+	float	rayAngle;
+	float	wallHitX;
+	float	wallHitY;
+	float	distance;
+	int		wasHitVertical;
+	int		isRayFacingUp;
+	int		isRayFacingRight;
+	int		isRayFacingDown;
+	int		isRayFacingLeft;
+	int		wallHitContent;
+	
+}	t_ray;
 
 typedef struct player
 {
@@ -87,14 +108,12 @@ void		struct_init(point *pl);
 void		draw_square(int x, int y,int width,int color, point *pl);
 void		draw_line(point *pl, int x1, int y1);
 int			reset_player(int key, point *pl);
-void		castallRays(point *pl);
-void		castRayy(float rayAngle, int id, point *pl);
+void		castallRays(point *pl, t_mapdata *mapinfo);
+void		castRayy(float rayAngle, int id, point *pl, t_mapdata *mapinfo);
 void		renderRays(point *pl);
-void		generate3dwalls(point *pl);
+void		generate3dwalls(point *pl, t_mapdata *mapinfo);
 void		find_player(point *pl);
 int			arr_size(char **arr);
-int 		move_player(int key, point *pl);
+int 	    move_player(int key, point *pl, t_mapdata *mapinfo);
 void		ft_init(t_mapdata *mapinfo);
-
-
-
+t_ray       *g_rays;

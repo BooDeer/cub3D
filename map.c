@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/26 23:07:40 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/29 18:27:47 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,7 +287,6 @@ int			ft_read_map(char *line, t_mapdata *mapinfo)
 	char *tmp;
 	if (!MFR)
 		MFR = 1;
-	printf("Hehe hoho I am here now\n");
 	if (line[ft_strlen2(line) - 1] != '1' && line[ft_strlen2(line) - 1] != ' ')
 	{
 		perror("Error\nmap is not closed\n");
@@ -333,7 +332,7 @@ int			ft_check_map(t_mapdata *mapinfo)
 					perror("Error\nthe map is not closed or it includes a wrong character\n");
 					return (1);
 				}
-				if ((ft_strlen(MAP[i - 1]) - 1 < j) || ft_strlen(MAP[i + 1]) - 1 < j)
+				if (((int)ft_strlen(MAP[i - 1]) - 1 < j) || (int)ft_strlen(MAP[i + 1]) - 1 < j)
 				{
 					perror("Error\nthe map is not closed\n");
 					return (1);				
@@ -353,11 +352,54 @@ int			ft_check_map(t_mapdata *mapinfo)
 	return (0);
 }
 
+int         ft_fill_mapsp(t_mapdata *mapinfo)
+{
+    int     len;
+    int     i;
+    int     j;
+    int     row_len;
+    int     col_len;
+    char    *tmp;
+    i = -1;
+    row_len = 0;
+    col_len = 0;
+    while (MAP[++i])
+    {
+        len = 0;
+        j = -1;
+        while (MAP[i][++j])
+            len++;
+        if (len > row_len)
+            row_len = len;
+        col_len++;
+    }
+    i = -1;
+    while (MAP[++i])
+    {
+        j = -1;
+        if (ft_strlen(MAP[i]) < row_len)
+        {
+            tmp = MAP[i];
+            MAP[i] = (char *)malloc(sizeof(char) * row_len + 1);
+            // printf("%d====\n", c_len);
+            ft_memset(MAP[i], ' ', row_len);
+            ft_memcpy(MAP[i], tmp, ft_strlen(tmp));
+            MAP[i][row_len] = '\0';
+            free(tmp);
+        }
+            printf("%s\n",MAP[i]);
+    }
+    MAP_ROWS = row_len;
+    MAP_COLUMNS = col_len;
+    return (0);
+}
+
 int			ft_fill_map(t_mapdata *mapinfo)
 {
 	MAP = ft_split(MAP_R, '\n');
 	if (ft_check_map(mapinfo))
 		return (1);
+    ft_fill_mapsp(mapinfo);
 	return (0);
 }
 
@@ -388,37 +430,26 @@ void		reading_file(t_mapdata *mapinfo)
 		if (line[i] == 'R' && ++param)
 			if (ft_resolution(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'S' && line[i + 1] == 'O' && ++param < 8)
+		if (line[i] == 'S' && line[i + 1] == 'O' && ++param)
 			if (ft_texture(&line[i], mapinfo))
 			return free_struct(mapinfo, line);
-		if (line[i] == 'N' && line[i + 1] == 'O' && ++param < 8)
+		if (line[i] == 'N' && line[i + 1] == 'O' && ++param)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'E' && line[i + 1] == 'A' && ++param < 8)
+		if (line[i] == 'E' && line[i + 1] == 'A' && ++param)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'W' && line[i + 1] == 'E' && ++param < 8)
+		if (line[i] == 'W' && line[i + 1] == 'E' && ++param)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if (line[i] == 'S' && line[i + 1] == ' ' && ++param < 8)
+		if (line[i] == 'S' && line[i + 1] == ' ' && ++param)
 			if (ft_texture(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-		if ((line[i] == 'F' || line [i] == 'C')	&& ++param < 8)
+		if ((line[i] == 'F' || line [i] == 'C')&& line[i + 1] == ' ' && ++param)
 			if (ft_color_value(&line[i], mapinfo))
 				return free_struct(mapinfo, line);
-
-		if (!ft_strchr("1 ", line[i]) && param > 9 )
-		{
-			perror("Error\nwrong character in the file\n");
-			return (free_struct(mapinfo, line));
-		}
 		if ((line[i] == '1' || line[i] == ' '))
 		{
-			if (param != 9 && MFR)
-			{
-				perror("Error\nthere's a missing argument\n");
-				return (free_struct(mapinfo, line));
-			}
 			if (ft_read_map(line, mapinfo))
 				return (free_struct(mapinfo, line));
 		}
@@ -432,18 +463,13 @@ void		reading_file(t_mapdata *mapinfo)
 			perror("Error\nThe map should be the last element of the file\n");
 			return (free_struct(mapinfo, line));
 		}
-		else if (MFR && line[0] != ' ' && line[0] != '1')
+		else if (MFR && ((ft_strchr("NWSE 02", line[i]) && line[i] != '\0') || (line[0] != ' ' && line[0] != '1')))
 		{
-			perror("Error\nThe map should be the last element of the file\n");
+			perror("Error\nempty line after the map\n");
 			return (free_struct(mapinfo, line));
 		}
 		if (ret == 0)
 			break ;
-		if (line[i] != '\0' && !ft_strchr("RSNEWSF1C ", line[i]))
-		{
-			perror("Error\nWrong character in the file\n");
-			return (free_struct(mapinfo, line));
-		}
 	}
 	if (MAP_R == '\0')
 	{
@@ -452,11 +478,8 @@ void		reading_file(t_mapdata *mapinfo)
 	}
 	if (ft_fill_map(mapinfo))
 		return (free_struct(mapinfo, line));
-	printf("%s\n", MAP_R);
-	printf("%d\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%d\n", mapinfo->width, mapinfo->height, mapinfo->north_texture, mapinfo->south_texture, mapinfo->west_texture, mapinfo->east_texture, mapinfo->sprite_texture, mapinfo->ceilling_color[2], mapinfo->floor_color[2]);
+	printf("%s\n", MAP[3]);
+	// printf("%d\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%d\n", mapinfo->width, mapinfo->height, mapinfo->north_texture, mapinfo->south_texture, mapinfo->west_texture, mapinfo->east_texture, mapinfo->sprite_texture, mapinfo->ceilling_color[2], mapinfo->floor_color[2]);
 	free(line);
 	close(fd);
-	printf("%c===%c\n", MAP[0][0], MAP[5][3]);
-	// while (1)
-	// 	;
 }

@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/26 23:17:34 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/29 18:28:07 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,121 +14,65 @@
 #include <stdio.h>
 
 
-struct	rays
-{
-	float	rayAngle;
-	float	wallHitX;
-	float	wallHitY;
-	float	distance;
-	int		wasHitVertical;
-	int		isRayFacingUp;
-	int		isRayFacingRight;
-	int		isRayFacingDown;
-	int		isRayFacingLeft;
-	int		wallHitContent;
-	
-}	ray[NUM_RAYS];
-
 double	f_mod(double a, double b)
 {
 	return (a - (floor(a/b) * b));
 }
 
-// int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
-// 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-//             {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-//             {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-//             {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1},
-//             {1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1},
-//             {1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1},
-//             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1},
-//             {1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
-//             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-// };
-/*
-int		Collision(int x, int y)
+int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1},
+            {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1},
+            {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1},
+            {1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1},
+            {1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 1},
+            {1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+};
+
+
+
+int		Collision(int x, int y, t_mapdata *mapinfo)
 {
 	int		indexX;
 	int		indexY;
 
 	indexX = x;
 	indexY = y;
-	if (indexX < 0 || indexX > WINDOW_WIDTH || indexY < 0 || indexY > WINDOW_HEIGHT)
+	if (indexX < 0 || indexX / TILE_SIZE  > MAP_ROWS || indexY < 0 || indexY / TILE_SIZE > MAP_COLUMNS)
 		return (1);
 	indexX = floor(indexX / TILE_SIZE);	
 	indexY = floor(indexY / TILE_SIZE);
-	// printf("%d============%d\n", indexX, indexY);
-	return (MAP[indexY][indexX] == 1);
+    printf("%d===%d===\n", indexX, indexY);
+	return (MAP[indexY][indexX] == '1');
 }
 
-float	normalizeAngle(float angle)
-{
-	angle = remainder(angle , 2 * M_PI);
-	if (angle < 0)
-		angle += 2 * M_PI;
-	return (angle);
-
-}
 
 float	distanceBetweenPoints(float x1, float y1, float x2, float y2)
 {
 	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }
-*/
+
 void 	 draw_map(point *pl, t_mapdata *mapinfo)
 {
-
-	int x, y;
-	static int check;
-
-	castallRays(pl);
-	generate3dwalls(pl);
-
-	for (int i = 0;  MAP[i]; i++)
-	{
-		for (int j = 0; MAP[i][j];j++)
-		{
-			if(MAP[i][j] == 1)
-			{
-				draw_square(i * TILE_SIZE * MINIMAP_SCALE,j * TILE_SIZE * MINIMAP_SCALE, TILE_SIZE * MINIMAP_SCALE, 0xff, pl);
-			}
-			else if (!MAP[i][j])
-				draw_square(i * TILE_SIZE * MINIMAP_SCALE,j * TILE_SIZE * MINIMAP_SCALE, TILE_SIZE * MINIMAP_SCALE, 0x000000, pl);
-			else
-			{
-				draw_square(i * TILE_SIZE * MINIMAP_SCALE , j * TILE_SIZE * MINIMAP_SCALE, TILE_SIZE * MINIMAP_SCALE, 0x000000, pl);
-				
-				if (!check++)
-				{
-					x = (i * TILE_SIZE) + TILE_SIZE / 2;
-					y = (j * TILE_SIZE) + TILE_SIZE / 2;
-					pl->x = x;
-					pl->y = y;
-					put_pixel(MINIMAP_SCALE * x + cos(pl->rotationAngle),MINIMAP_SCALE * y, 0xffffff + cos(pl->rotationAngle), pl->color_buffer_texture);
-				}
-			}
-			
-		}
-
-		// draw_line(pl, pl->x + cos(pl->rotationAngle) * 50, pl->y + sin(pl->rotationAngle) * 50);
-	}
-
-	// renderRays(pl);
+	castallRays(pl, mapinfo);
+	generate3dwalls(pl, mapinfo);
 }
-/*
+
 void	find_player(point *pl)
 {
 	int		i;
 	int		j;
 
 	i = -1;
-	while (MAP[++i])
+	while (++i < MAP_NUM_COLS)
 	{
 		j = -1;
 		while (++j < MAP_NUM_ROWS)
-			if (MAP[i][++j])
+			if (map[j][i] == 5)
 			{
 				pl->x = (i * TILE_SIZE) + TILE_SIZE / 2;
 				pl->y = (j * TILE_SIZE) + TILE_SIZE / 2;
@@ -136,60 +80,53 @@ void	find_player(point *pl)
 			}
 	}
 }
-void			generate3dwalls(point *pl)
+void			generate3dwalls(point *pl, t_mapdata *mapinfo)
 {
 	int		*tmp;
 	int		k;
 	tmp = (int *)mlx_get_data_addr(pl->color_buffer_texture, &k, &k, &k);
 	int		textureOffsetX, textureOffsetY;
 
-	for (int i = 0; i < NUM_RAYS; i++)
+	for (int i = 0; i < WIDTH; i++)
 	{
-		float perpDistance = ray[i].distance * cos(ray[i].rayAngle - pl->rotationAngle);
-		float distanceProjPlane = (WINDOW_WIDTH / 2) / tan(FOV_ANGLE / 2);
+		float perpDistance = g_rays[i].distance * cos(g_rays[i].rayAngle - pl->rotationAngle);
+		float distanceProjPlane = (WIDTH / 2) / tan(FOV_ANGLE / 2);
 		float projectedWallHeight = (TILE_SIZE / perpDistance) * distanceProjPlane;
 
 		int		wallStripHeight = (int)projectedWallHeight;
 
-		int wallTopPixel = (WINDOW_HEIGHT / 2) - (wallStripHeight / 2);
+		int wallTopPixel = (HEIGHT / 2) - (wallStripHeight / 2);
 		wallTopPixel = wallTopPixel < 0 ? 0 : wallTopPixel;
 
-		int wallBottomPixel = (WINDOW_HEIGHT / 2) + (wallStripHeight / 2);
-		wallBottomPixel = wallBottomPixel > WINDOW_HEIGHT ? WINDOW_HEIGHT : wallBottomPixel;
+		int wallBottomPixel = (HEIGHT / 2) + (wallStripHeight / 2);
+		wallBottomPixel = wallBottomPixel > HEIGHT ? HEIGHT : wallBottomPixel;
 
 		for (int y = 0; y < wallTopPixel; y++)
-			tmp[i + (WINDOW_WIDTH * y)] = 0x0000FF;
-			if (ray[i].wasHitVertical)
-				textureOffsetX = f_mod(ray[i].wallHitY, TILE_SIZE) * (pl->texture_width / TILE_SIZE);
+			tmp[i + (WIDTH * y)] = 0x0000FF;
+			if (g_rays[i].wasHitVertical)
+				textureOffsetX = f_mod(g_rays[i].wallHitY, TILE_SIZE) * (pl->texture_width / TILE_SIZE);
 		else
-			textureOffsetX = f_mod(ray[i].wallHitX, TILE_SIZE)  * (pl->texture_width / TILE_SIZE);
+			textureOffsetX = f_mod(g_rays[i].wallHitX, TILE_SIZE)  * (pl->texture_width / TILE_SIZE);
 			
 		float		test;
 		float	step;
 		test = 0;
-		step = pl->texture_height / WINDOW_HEIGHT;
+		step = pl->texture_height / HEIGHT;
 		for (int y = wallTopPixel; y < wallBottomPixel; y++)
 		{
-			int		distanceFromTop = y +  (wallStripHeight / 2) - (WINDOW_HEIGHT / 2);
+			int		distanceFromTop = y +  (wallStripHeight / 2) - (HEIGHT / 2);
 			
 			textureOffsetY = distanceFromTop * ((float)pl->texture_height / wallStripHeight);
 
-			tmp[i + ((WINDOW_WIDTH) * y)] = pl->texture_buffer[textureOffsetX + (textureOffsetY * pl->texture_width)];
+			tmp[i + ((WIDTH) * y)] = pl->texture_buffer[textureOffsetX + (textureOffsetY * pl->texture_width)];
 
 		}
-		for (int y = wallBottomPixel; y < WINDOW_HEIGHT; y++)
-			tmp[i + (WINDOW_WIDTH * y)] = 0x00000E;
+		for (int y = wallBottomPixel; y < HEIGHT; y++)
+			tmp[i + (WIDTH * y)] = 0x00000E;
 	}
 }
-void	renderRays(point *pl)
+void	castRayy(float rayAngle, int id, point *pl, t_mapdata *mapinfo)
 {
-	for (int i = 0; i < NUM_RAYS; i++)
-		draw_line(pl, MINIMAP_SCALE * ray[i].wallHitX, MINIMAP_SCALE * ray[i].wallHitY);
-}
-void	castRayy(float rayAngle, int id, point *pl)
-{
-	rayAngle = normalizeAngle(rayAngle);
-
 	int		isRayFacingDown = rayAngle > 0 && rayAngle < M_PI;
 	int		isRayFacingUp = !isRayFacingDown;
 	int		isRayFacingRight = rayAngle < 0.5 * M_PI || rayAngle > 1.5 * M_PI;
@@ -218,16 +155,16 @@ void	castRayy(float rayAngle, int id, point *pl)
 	float nextHorzTouchX = xintercept;
 	float nextHorzTouchY = yintercept;
 
-	while (nextHorzTouchX >= 0 && nextHorzTouchX <= WINDOW_WIDTH && nextHorzTouchY >= 0 && nextHorzTouchY <= WINDOW_HEIGHT)
+	while (nextHorzTouchX >= 0 && nextHorzTouchX <= WIDTH && nextHorzTouchY >= 0 && nextHorzTouchY <= HEIGHT)
 	{
 		float xToCheck = nextHorzTouchX;
 		float yToCheck = nextHorzTouchY + (isRayFacingUp ? -1 : 0);
 
-		if (Collision(xToCheck, yToCheck))
+		if (Collision(xToCheck, yToCheck, mapinfo))
 		{
 			horzWallHitX = nextHorzTouchX;
 			horzWallHitY = nextHorzTouchY;
-			horzWallContent = MAP[(int)floor(yToCheck / TILE_SIZE)][(int)floor(xToCheck / TILE_SIZE)];
+			horzWallContent = map[(int)floor(yToCheck / TILE_SIZE) / 14][(int)floor(xToCheck / TILE_SIZE) / 29];
 			foundHorzWallHit = 1;
 			break;
 		}
@@ -238,12 +175,13 @@ void	castRayy(float rayAngle, int id, point *pl)
 		}
 	
 	}
-	// put_pixel(horzWallHitX, horzWallHitY, 0xff0000, pl->color_buffer_texture);
-	// printf("=======|%d|=======\n", NUM_RAYS);
-	//////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////
+    /////////////////////////////////
+    /////////////////////////////////
+    /////////////////////////////////
+    /////////////////////////////////
+    /////////////////////////////////
+
+
 
 	int		foundVertWallHit = 0;
 	float	VertWallHitX = 0;
@@ -265,16 +203,16 @@ void	castRayy(float rayAngle, int id, point *pl)
 	float nextVertTouchX = xintercept;
 	float nextVertTouchY = yintercept;
 
-	while (nextVertTouchX >= 0 && nextVertTouchX <= WINDOW_WIDTH && nextVertTouchY >= 0 && nextVertTouchY <= WINDOW_HEIGHT)
+	while (nextVertTouchX >= 0 && nextVertTouchX <= WIDTH && nextVertTouchY >= 0 && nextVertTouchY <= HEIGHT)
 	{
 		float xToCheck = nextVertTouchX + (isRayFacingLeft ? -1 : 0);
 		float yToCheck = nextVertTouchY;
 
-		if (Collision(xToCheck, yToCheck))
+		if (Collision(xToCheck, yToCheck, mapinfo))
 		{
 			VertWallHitX = nextVertTouchX;
 			VertWallHitY = nextVertTouchY;
-			VertWallContent = MAP[(int)floor(yToCheck / TILE_SIZE)][(int)floor(xToCheck / TILE_SIZE)];
+			VertWallContent = map[(int)floor(yToCheck / TILE_SIZE)][(int)floor(xToCheck / TILE_SIZE)];
 			foundVertWallHit = 1;
 			break;
 		}
@@ -290,55 +228,47 @@ void	castRayy(float rayAngle, int id, point *pl)
 	float vertHitDistance = foundVertWallHit ? distanceBetweenPoints(pl->x, pl->y, VertWallHitX, VertWallHitY) : INT_MAX;
 	if (vertHitDistance < horzHitDistance)
 	{
-		ray[id].distance = vertHitDistance;
-		ray[id].wallHitX = VertWallHitX; 
-		ray[id].wallHitY = VertWallHitY;
-		ray[id].wallHitContent = VertWallContent;
-		ray[id].wasHitVertical = 1;
+		g_rays[id].distance = vertHitDistance;
+		g_rays[id].wallHitX = VertWallHitX; 
+		g_rays[id].wallHitY = VertWallHitY;
+		g_rays[id].wallHitContent = VertWallContent;
+		g_rays[id].wasHitVertical = 1;
 	}
 	else
 	{
-		ray[id].distance = horzHitDistance;
-		ray[id].wallHitX = horzWallHitX; 
-		ray[id].wallHitY = horzWallHitY;
-		ray[id].wallHitContent = horzWallContent;
-		ray[id].wasHitVertical = 0;		
+		g_rays[id].distance = horzHitDistance;
+		g_rays[id].wallHitX = horzWallHitX; 
+		g_rays[id].wallHitY = horzWallHitY;
+		g_rays[id].wallHitContent = horzWallContent;
+		g_rays[id].wasHitVertical = 0;		
 	}
-	ray[id].rayAngle = rayAngle;
-	ray[id].isRayFacingDown = isRayFacingDown;
-	ray[id].isRayFacingUp = isRayFacingUp;
-	ray[id].isRayFacingRight = isRayFacingRight;
-	ray[id].isRayFacingLeft = isRayFacingLeft;	
+	g_rays[id].rayAngle = rayAngle;
+	g_rays[id].isRayFacingDown = isRayFacingDown;
+	g_rays[id].isRayFacingUp = isRayFacingUp;
+	g_rays[id].isRayFacingRight = isRayFacingRight;
+	g_rays[id].isRayFacingLeft = isRayFacingLeft;	
 }
 
 
-int 	move_player(int key, point *pl)
+int 	move_player(int key, point *pl, t_mapdata *mapinfo)
 {
 	float	moveStep, oldPlayerx, oldPlayery;
 	oldPlayerx = pl->x;
 	oldPlayery = pl->y;
 	// printf("====ddddddd==== %d\n", key);
-	if (key == 13)
+	if (key == KEY_UP)
 	{
 		pl->walkDirection = 1;
 	}
-	if (key == 1)
+	if (key == KEY_DOWN)
 	{
 		pl->walkDirection = -1;
 	}
-	if (key == 2)
-	{
-		pl->turnDirection = 1;
-	}
-	if (key == 0)
-	{
-		pl->turnDirection = -1;
-	}
 	if (key == 53)
 		exit(1);
-	if (key == 124)
+	if (key == KEY_RIGHT)
 		pl->rotationAngle += M_PI / 20;
-	if (key == 123)
+	if (key == KEY_LEFT)
 		pl->rotationAngle -= M_PI / 20;
 
 	// pl->rotationAngle += pl->turnDirection * pl->turnSpeed;
@@ -346,7 +276,7 @@ int 	move_player(int key, point *pl)
 	
 	pl->x = pl->x + cos(pl->rotationAngle) * moveStep;
 	pl->y = pl->y + sin(pl->rotationAngle) * moveStep;
-	if (Collision(pl->x, pl->y))
+	if (Collision(pl->x, pl->y, mapinfo))
 	{
 		pl->x = oldPlayerx;
 		pl->y = oldPlayery;
@@ -354,10 +284,7 @@ int 	move_player(int key, point *pl)
 	mlx_destroy_image(pl->mlx_ptr, pl->color_buffer_texture);
 	pl->color_buffer_texture = mlx_new_image(pl->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
 	// mlx_clear_window(pl->mlx_ptr, pl->win_ptr);	
-	draw_map(pl);
-	// castallRays(pl);
-	// renderRays(pl);
-	put_pixel(MINIMAP_SCALE * pl->x + cos(pl->rotationAngle),MINIMAP_SCALE * pl->y + sin(pl->rotationAngle), 0xffffff, pl->color_buffer_texture);
+	draw_map(pl, mapinfo);
 	mlx_put_image_to_window(pl->mlx_ptr, pl->win_ptr, pl->color_buffer_texture, 0, 0);
 
 	// printf("%f <====================> %f\n", ray[0].wallHitX, ray[0].wallHitY);
@@ -379,28 +306,27 @@ int		move_p(point *pl)
 	return 0;
 }
 
-*/
 int		main()
 {
 
 	point pl;
-	void *img;
 	int 	useless;
-    t_mapdata   *mapinfo;
+	t_mapdata 	*mapinfo;
 	mapinfo = malloc(sizeof(t_mapdata));
 	if (!mapinfo)
 		return (-1);
 	ft_init(mapinfo);
 	reading_file(mapinfo);
-    printf("%d=====================%d\n", WIDTH,HEIGHT);
     pl.mlx_ptr = mlx_init();
-    pl.win_ptr = mlx_new_window(pl.mlx_ptr, WIDTH, HEIGHT,"bruh");
+    pl.win_ptr = mlx_new_window(pl.mlx_ptr,WIDTH, HEIGHT,"bruh");
     pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WIDTH,HEIGHT);
     struct_init(&pl);
     pl.xpm_picture = mlx_xpm_file_to_image(pl.mlx_ptr, "picture_3.xpm", &pl.texture_width, &pl.texture_height);
+    printf("%d===========%d\n", pl.texture_width, pl.texture_height);
     pl.texture_buffer = (int *)mlx_get_data_addr(pl.xpm_picture, &useless, &useless, &useless);
+    g_rays = malloc(sizeof(t_ray) * WIDTH);
     draw_map(&pl, mapinfo);
-    // mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
+    mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
     mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
     mlx_loop(pl.mlx_ptr);
 }
