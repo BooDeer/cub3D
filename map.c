@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/29 18:27:47 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/30 00:18:22 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -478,7 +478,6 @@ void		reading_file(t_mapdata *mapinfo)
 	}
 	if (ft_fill_map(mapinfo))
 		return (free_struct(mapinfo, line));
-	printf("%s\n", MAP[3]);
 	// printf("%d\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%d\n", mapinfo->width, mapinfo->height, mapinfo->north_texture, mapinfo->south_texture, mapinfo->west_texture, mapinfo->east_texture, mapinfo->sprite_texture, mapinfo->ceilling_color[2], mapinfo->floor_color[2]);
 	free(line);
 	close(fd);

@@ -6,45 +6,45 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 18:29:36 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/27 19:59:41 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/10/30 17:38:20 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-void	put_pixel(int x, int y, int color, void *img)
+void	put_pixel(int x, int y, int color, void *img, t_mapdata *mapinfo)
 {
 	int k;
 	int *tmp;
-	// if (x > WINDOW_WIDTH - 1 || y > WINDOW_HEIGHT - 1 || x < 0 || y < 0)
-	// 	return ;
+	if (x > WIDTH || y > HEIGHT || x < 0 || y < 0)
+		return ;
 	tmp = (int *)mlx_get_data_addr(img, &k, &k, &k);
-	tmp[x + (y * WINDOW_WIDTH)] = color;
+	tmp[x + (y * WIDTH)] = color;
 }
 
-void	draw_square(int x, int y,int width,int color, point *pl)
+void	draw_square(int x, int y,int width,int height,int color, point *pl, t_mapdata *mapinfo)
 {
 	int i = -1, j;
 	while(++i < width)
 	{
 		j = -1;
-		while(++j < width)
-			put_pixel((j + x), (i + y), color, pl->color_buffer_texture);
-			// mlx_pixel_put(_____);
+		while(++j < height)
+			put_pixel((j + x), (i + y), color, pl->color_buffer_texture, mapinfo);
 	}		
 }
 
 
 float	normalizeAngle(float angle)
 {
-	angle = remainder(angle , 2 * M_PI);
-	if (angle < 0)
-		angle += 2 * M_PI;
+    if (angle < 0)
+        angle += 2 * M_PI;
+    if (angle > M_PI * 2)
+	    angle -= (M_PI * 2);
 	return (angle);
 
 }
 
-void	draw_line(point *pl, int x1,int y1)
+void	draw_line(point *pl, int x1,int y1, t_mapdata *mapinfo)
 {
 	int x0 = MINIMAP_SCALE * (int)floor(pl->x);
 	int y0 = MINIMAP_SCALE * (int)floor(pl->y); 
@@ -55,7 +55,7 @@ void	draw_line(point *pl, int x1,int y1)
 	// int color = rand();
 	while (1)
 	{
-		put_pixel(x0,y0, 0xff0000, pl->color_buffer_texture);
+		put_pixel(x0,y0, 0xff0000, pl->color_buffer_texture,mapinfo);
 		if (x0 == x1 && y0 == y1)
 			break;
 		e2 = 2 * err;
