@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/30 01:25:47 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/01 18:52:41 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,25 +29,27 @@
 #define FOV_ANGLE (60 * (M_PI / 180))
 #define	WALL_WIDTH 1
 #define NUM_RAYS (WINDOW_WIDTH * WALL_WIDTH)
-#define WIDTH mapinfo->width
-#define HEIGHT mapinfo->height
-#define NO mapinfo->north_texture
-#define SO mapinfo->south_texture
-#define WE mapinfo->west_texture
-#define EA mapinfo->east_texture
-#define SP mapinfo->sprite_texture
-#define F mapinfo->floor_color
-#define C mapinfo->ceilling_color
-#define	MAP_R mapinfo->map_reader
-#define MAP mapinfo->map
-#define	MFR mapinfo->map_first_read
-#define	CP mapinfo->check_player
-#define MAP_ROWS mapinfo->map_rows
-#define MAP_COLUMNS mapinfo->map_columns
+#define WIDTH g_mapinfo->width
+#define HEIGHT g_mapinfo->height
+#define NO g_mapinfo->north_texture
+#define SO g_mapinfo->south_texture
+#define WE g_mapinfo->west_texture
+#define EA g_mapinfo->east_texture
+#define SP g_mapinfo->sprite_texture
+#define F g_mapinfo->floor_color
+#define C g_mapinfo->ceilling_color
+#define	MAP_R g_mapinfo->map_reader
+#define MAP g_mapinfo->map
+#define	MFR g_mapinfo->map_first_read
+#define	CP g_mapinfo->check_player
+#define MAP_ROWS g_mapinfo->map_rows
+#define MAP_COLUMNS g_mapinfo->map_columns
+#define mapinfo g_mapinfo
 #define KEY_UP 13
 #define KEY_DOWN 1
 #define KEY_RIGHT 2
 #define KEY_LEFT 0
+
 
 typedef struct	s_list
 {
@@ -67,20 +69,6 @@ typedef struct	s_list
     int     map_rows;
     int     map_columns;
 }				t_mapdata;
-typedef struct	s_rays
-{
-	float	rayAngle;
-	float	wallHitX;
-	float	wallHitY;
-	float	distance;
-	int		wasHitVertical;
-	int		isRayFacingUp;
-	int		isRayFacingRight;
-	int		isRayFacingDown;
-	int		isRayFacingLeft;
-	int		wallHitContent;
-	
-}	t_ray;
 
 typedef struct player
 {
@@ -101,19 +89,40 @@ typedef struct player
 	int			texture_width;
 	int			texture_height;
 }	point;
+typedef struct	s_rays
+{
+	float	rayAngle;
+	float	wallHitX;
+	float	wallHitY;
+	float	distance;
+	int		wasHitVertical;
+	int		isRayFacingUp;
+	int		isRayFacingRight;
+	int		isRayFacingDown;
+	int		isRayFacingLeft;
+	int		wallHitContent;
+	
+}	        t_ray;
 
-void	    put_pixel(int x, int y, int color, void *img, t_mapdata *mapinfo);
+void		put_pixel(int x, int y, int color, void *img);
 void		reading_file(t_mapdata *mapinfo);
-void	    struct_init(point *pl, t_mapdata *mapinfo);
-void	draw_square(int x, int y,int width,int height,int color, point *pl, t_mapdata *mapinfo);
-void	    draw_line(point *pl, int x1,int y1, t_mapdata *mapinfo);
-int			reset_player(int key, point *pl);
-void		castallRays(point *pl, t_mapdata *mapinfo);
-void		castRayy(float rayAngle, int id, point *pl, t_mapdata *mapinfo);
-void	    renderRays(point *pl, t_mapdata *mapinfo);
-void		generate3dwalls(point *pl, t_mapdata *mapinfo);
-void	    find_player(point *pl, t_mapdata *mapinfo);
-int			arr_size(char **arr);
-int 	    move_player(int key, point *pl, t_mapdata *mapinfo);
+void		struct_init(point *pl);
 void		ft_init(t_mapdata *mapinfo);
+void		draw_square(int x, int y,int width,int color, point *pl);
+void		draw_line(point *pl, int x1, int y1);
+int			reset_player(int key, point *pl);
+void		castallRays(point *pl);
+void		castRayy(float rayAngle, int id, point *pl);
+void		renderRays(point *pl);
+void		generate3dwalls(point *pl);
+void		find_player(point *pl);
+int			arr_size(char **arr);
+int 		move_player(int key, point *pl);
+t_mapdata 	*g_mapinfo;
 t_ray       *g_rays;
+
+
+
+
+
+

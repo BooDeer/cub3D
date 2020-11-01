@@ -6,12 +6,11 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/30 00:18:22 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/01 18:52:57 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
-#include "GNL/get_next_line.h"
 
 
 //TODO: change every two lines that includes perror and
@@ -377,7 +376,7 @@ int         ft_fill_mapsp(t_mapdata *mapinfo)
     while (MAP[++i])
     {
         j = -1;
-        if (ft_strlen(MAP[i]) < row_len)
+        if ((int)ft_strlen(MAP[i]) < row_len)
         {
             tmp = MAP[i];
             MAP[i] = (char *)malloc(sizeof(char) * row_len + 1);

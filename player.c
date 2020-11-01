@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 11:53:05 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/10/29 19:57:20 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/01 18:53:10 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 
 
-void	struct_init(point *pl, t_mapdata *mapinfo)
+void	struct_init(point *pl)
 {
-	find_player(pl, mapinfo);
+	find_player(pl);
 	pl->radius = 3;
 	pl->turnDirection = 0;
 	pl->walkDirection = 0 ;
 	pl->rotationAngle = 0;
-	pl->moveSpeed = TILE_SIZE / 7;
+	pl->moveSpeed = TILE_SIZE / 3;
 	pl->rotationSpeed = 2 * (M_PI  / 180);
 	pl->turnDirection = 45 * (M_PI / 180);	
 }
