@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 18:29:36 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/01 18:52:32 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/02 18:29:36 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	draw_line(point *pl, int x1,int y1)
 {
 	float		rayAngle;
 	int			i;
-    g_rays = (t_ray *)malloc(sizeof(t_ray) * WIDTH);
 
 	rayAngle = pl->rotationAngle - (FOV_ANGLE / 2);
 	i = -1;

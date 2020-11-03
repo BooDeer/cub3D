@@ -6,12 +6,12 @@
 #    By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/25 09:27:51 by hboudhir          #+#    #+#              #
-#    Updated: 2020/01/25 09:30:33 by hboudhir         ###   ########.fr        #
+#    Updated: 2020/11/02 23:32:58 by hboudhir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-CC = gcc
+CC = gccc
 AR = ar
 NAME = cub3D.a
 LIB = cub3D.h

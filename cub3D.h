@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/01 18:52:41 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/03 23:45:37 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,14 @@
 #define MAP_ROWS g_mapinfo->map_rows
 #define MAP_COLUMNS g_mapinfo->map_columns
 #define mapinfo g_mapinfo
+#define TXT g_mapinfo->map_textures 
+#define TXTP g_mapinfo->texture_pointers
+#define TXT_W g_mapinfo->texture_width
+#define TXT_H g_mapinfo->texture_height
 #define KEY_UP 13
 #define KEY_DOWN 1
 #define KEY_RIGHT 2
 #define KEY_LEFT 0
-
 
 typedef struct	s_list
 {
@@ -68,6 +71,10 @@ typedef struct	s_list
 	int		check_player;
     int     map_rows;
     int     map_columns;
+    int    *map_textures[4]; // NO = 1 SO = 2 WE = 3 EA = 4
+    void   *texture_pointers[4];
+    int    texture_width[4];
+    int     texture_height[4];
 }				t_mapdata;
 
 typedef struct player
@@ -89,6 +96,7 @@ typedef struct player
 	int			texture_width;
 	int			texture_height;
 }	point;
+
 typedef struct	s_rays
 {
 	float	rayAngle;
@@ -104,20 +112,27 @@ typedef struct	s_rays
 	
 }	        t_ray;
 
-void		put_pixel(int x, int y, int color, void *img);
-void		reading_file(t_mapdata *mapinfo);
-void		struct_init(point *pl);
-void		ft_init(t_mapdata *mapinfo);
-void		draw_square(int x, int y,int width,int color, point *pl);
-void		draw_line(point *pl, int x1, int y1);
-int			reset_player(int key, point *pl);
-void		castallRays(point *pl);
-void		castRayy(float rayAngle, int id, point *pl);
-void		renderRays(point *pl);
-void		generate3dwalls(point *pl);
-void		find_player(point *pl);
-int			arr_size(char **arr);
-int 		move_player(int key, point *pl);
+void	  	put_pixel(int x, int y, int color, void *img);
+int 		  reading_file(t_mapdata *mapinfo);
+void		  struct_init(point *pl);
+void		  ft_init(t_mapdata *mapinfo);
+void		  draw_square(int x, int y,int width,int color, point *pl);
+void		  draw_line(point *pl, int x1, int y1);
+int		  	reset_player(int key, point *pl);
+void		  castallRays(point *pl);
+void		  castRayy(float rayAngle, int id, point *pl);
+void		  renderRays(point *pl);
+void		  generate3dwalls(point *pl);
+void		  find_player(point *pl);
+int			  arr_size(char **arr);
+int 		  move_player(int key, point *pl);
+size_t		ft_strlen2(char *s);
+int				str_isdigit(char *str);
+int				arr_size(char **arr);
+int				free_struct(t_mapdata *mapinfo, char *line);
+int				check_color_parametre(char *param);
+int				error_message(char *error);
+int				fill_color_values(char *arr, t_mapdata *mapinfo, int f_or_c, int i);
 t_mapdata 	*g_mapinfo;
 t_ray       *g_rays;
 

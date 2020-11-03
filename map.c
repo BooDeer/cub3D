@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/01 18:52:57 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/04 00:11:50 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,9 @@
 //TODO: change every two lines that includes perror and
 // 		a return statement by a function to save some space
 
-size_t		ft_strlen2(char *s)
-{
-	size_t		i;
+// Check the extension of the texture files.
 
-	i = 0;
-	if (!s)
-		return (0);
-	while (s[i] != '\0' && s[i] != '\n')
-		i++;
-	return (i);
-}
+
 void		ft_init(t_mapdata *mapinfo)
 {
 	WIDTH = -1;
@@ -43,58 +35,29 @@ void		ft_init(t_mapdata *mapinfo)
 	CP = 0;
 }
 
-int			str_isdigit(char *str)
-{
-	int		i;
 
-	i = -1;
-	while (str[++i])
-		if(!ft_isdigit(str[i]))
-			return(0);
-	return (1);
-}
 
-int			arr_size(char **arr)
-{
-	int		i;
-	i = -1;
-
-	// printf("Test\n");
-	while (arr[++i])
-		;
-	return (i);
-}
 
 int		ft_resolution(char *line, t_mapdata *mapinfo)
 {
 	char	**arr = ft_split(line, ' ');
 
 	if (arr_size(arr) != 3)
-	{
-		perror("Error.\nwrong number of arguments.\n");
-		return (-1);
-	}
+		error_message("Error.\nwrong number of arguments.\n");
 	if (line[1] != ' ' && line)
-	{
-		perror("Error.\nno space after the parametre.\n");
-		return (-1);
-	}
+		error_message("Error.\nno space after the parametre.\n");
 	if (!str_isdigit(arr[1]) || !str_isdigit(arr[2]))
-	{
-		perror("Error.\nthe arguments should only contain positive numbers.\n");
-		return (-1);
-	}
+		error_message("Error.\nthe arguments should only contain positive numbers.\n");
 	if (WIDTH != -1 || HEIGHT != -1)
-	{
-		perror("Error\nan argument is duplicated\n");
-		return (-1);
-	}
+		error_message("Error\nan argument is duplicated\n");
 	else
 	{
 		WIDTH = ft_atoi(arr[1]);
 		HEIGHT = ft_atoi(arr[2]);
 	}
 	free(arr);
+    if (WIDTH == 0 || HEIGHT == 0)
+			error_message("Error\nImpossible resolution\n");
 	(WIDTH >= 2560) ? WIDTH = 2560 : WIDTH;
 	(HEIGHT >= 1440) ? HEIGHT = 1440 : WIDTH;
 	(WIDTH < 10) ? WIDTH = 10 : WIDTH;
@@ -109,85 +72,51 @@ int		ft_texture(char *line, t_mapdata *mapinfo)
 
 	i = -1;
 	if (arr_size(arr) != 2)
-	{
-		perror("Error.\nwrong number of arguments");
-		return (-1);
-	}
+		error_message("Error.\nwrong number of arguments");
 	if (line[2] != ' ' && *arr[0] != 'S')
-	{
-		perror("Error.\nno space after the parametre.\n");
-		return (-1);
-	}
+		error_message("Error.\nno space after the parametre.\n");
 	if (open(ft_strtrim(arr[1], "\'"), O_RDONLY) == -1)
-	{
-		perror("Error.\ntexture file");
-		return (-1);
-	}
+		error_message("Error.\ntexture file not found");
 	else
 	{
 		if (line[0] == 'S' && line[1] == 'O')
 		{
 			if (SO != NULL)
-			{
-				perror("Error\nan argument is duplicated\n");
-				return (-1);
-			}
+				error_message("Error\nan argument is duplicated\n");
 			SO = ft_strdup(arr[1]);
 		}
 		if (line[0] == 'W')
 		{
 			if (WE != NULL)
-			{
-				perror("Error\nan argument is duplicated\n");
-				return (-1);
-			}
+				error_message("Error\nan argument is duplicated\n");
 			WE = ft_strdup(arr[1]);
 		}
 		if (line[0] == 'E')
 		{
 			if (EA != NULL)
-			{
-				perror("Error\nan argument is duplicated\n");
-				return (-1);
-			}
+				error_message("Error\nan argument is duplicated\n");
 			EA = ft_strdup(arr[1]);
 		}
 		if (line[0] == 'N')
 		{
 			if (NO != NULL)
-			{
-				perror("Error\nan argument is duplicated\n");
-				return (-1);
-			};
+				error_message("Error\nan argument is duplicated\n");
 			NO = ft_strdup(arr[1]);
 		}
 		if (line[0] == 'S' && line[1] != 'O')
 		{
 			if (SP != NULL)
-			{
-				perror("Error\nan argument is duplicated\n");
-				return (-1);
-			}
+				error_message("Error\nan argument is duplicated\n");
 			SP = ft_strdup(arr[1]);
 		}
 	}
-	// printf("%s\n", arr[1]);
 	while(arr[++i])
 		free(arr[i]);
 	free(arr);
 	return (0);
 }
 
-void		free_struct(t_mapdata *mapinfo, char *line)
-{
-	(SO != NULL) ? free(SO) : 0;	
-	(EA != NULL) ? free(EA) : 0;	
-	(NO != NULL) ? free(NO) : 0;	
-	(WE != NULL) ? free(WE) : 0;
-	(SP != NULL) ? free(SP) : 0;
-	if (!ft_strchr("RNSWEFC 10", *line) || *line != '\0')
-		free(line);
-}
+
 
 //
 //	Skip the spaces and check if the parametre
@@ -195,55 +124,9 @@ void		free_struct(t_mapdata *mapinfo, char *line)
 //	special characters or number below or over
 //	the value [0, 255].
 //
-int			check_color_parametre(char *param) // F                256qd,   0 0, -250
-{
-	int		i;
-
-	i = -1;
-	while (param[++i] == ' ')
-		i++;
-	while (param[++i])
-	{
-		if (ft_isdigit(param[i]) || param[i] == ' ')
-			continue ;
-		else
-			return (1);
-	}
-	return (0);
-	
-}
-
-int			fill_color_values(char *arr, t_mapdata *mapinfo, int f_or_c, int i)
-{
-	int		tmp;
 
 
-		tmp = ft_atoi(arr);
-		if (tmp > 255 || tmp < 0)
-		{
-			perror("Error\nColor values should be between 0 and 255\n");
-			return (-1);
-		}
-		if (f_or_c == 70)
-		{
-			if (F[2] != -1)
-			{
-				perror("Error\nan argument is duplicated\n");
-				return (-1);
-			}
-			mapinfo->floor_color[i] = tmp;
-		}
-		else
-		{
-			if (C[2] != -1)
-			{
-				perror("Error\nan argument is duplicated\n");
-				return (-1);
-			}
-			mapinfo->ceilling_color[i] = tmp;
-		}
-	return (0);
-}
+
 
 int			ft_color_value(char *line, t_mapdata *mapinfo)
 {
@@ -252,22 +135,16 @@ int			ft_color_value(char *line, t_mapdata *mapinfo)
 	
 	i = -1;
 	if ((line[0] == 'F' || line [0] == 'C') && line[1] != ' ')
-	{
-		perror("Error.\nNo space after the color parametre.\n");
-		return (-1);
-	}
+		error_message("Error.\nNo space after the color parametre.\n");
 	else
 	{
 		arr = ft_split(&line[1], ',');
 		if (arr_size(arr) != 3)
-		{
-			perror("Error.\nwrong number of arguments.\n");
-			return (-1);		
-		}
+			error_message("Error.\nwrong number of arguments.\n");
 		while (arr[++i])
 		{
 			if (check_color_parametre(arr[i]))
-				perror("Error.\nColor parametre contains non-numeric characters\n");
+				error_message("Error.\nColor parametre contains non-numeric characters\n");
 			else
 				if (fill_color_values(arr[i], mapinfo, line[0], i))
 				{
@@ -287,10 +164,7 @@ int			ft_read_map(char *line, t_mapdata *mapinfo)
 	if (!MFR)
 		MFR = 1;
 	if (line[ft_strlen2(line) - 1] != '1' && line[ft_strlen2(line) - 1] != ' ')
-	{
-		perror("Error\nmap is not closed\n");
-		return (1);
-	}
+		error_message("Error\nmap is not closed\n");
 	tmp = MAP_R;
 	MAP_R = ft_strjoin(MAP_R, line);
 	free(tmp);
@@ -313,41 +187,25 @@ int			ft_check_map(t_mapdata *mapinfo)
 		while (MAP[i][j])
 		{
 			if (CP && ft_strchr("NEWS", MAP[i][j]))
-			{
-				perror("Error\nThere's more than one player in the map\n");
-				return (1);
-			}
+				error_message("Error\nThere's more than one player in the map\n");;
 			if (i == 0)
 				if (MAP[i][j] != ' ' && MAP[i][j] != '1')
-				{
-					perror("Error\nmap not closed\n");
-					return (1);
-				}
+					error_message("Error\nmap not closed\n");
 			if (MAP[i][j] == '0' || MAP[i][j] == '2' || MAP[i][j] == 'N' || MAP[i][j] == 'E' || MAP[i][j] == 'W' ||  MAP[i][j] == 'S' )
 			{
 				if ((!ft_strchr("120NEWS",MAP[i - 1][j]) || !ft_strchr("120NEWS",MAP[i + 1][j]) ||
 				!ft_strchr("120NEWS",MAP[i][j - 1])|| !ft_strchr("120NEWS",MAP[i][j + 1])))
-				{
-					perror("Error\nthe map is not closed or it includes a wrong character\n");
-					return (1);
-				}
+					error_message("Error\nthe map is not closed or it includes a wrong character\n");
 				if (((int)ft_strlen(MAP[i - 1]) - 1 < j) || (int)ft_strlen(MAP[i + 1]) - 1 < j)
-				{
-					perror("Error\nthe map is not closed\n");
-					return (1);				
-				}
+					error_message("Error\nthe map is not closed\n");
 				if (ft_isalpha(MAP[i][j]))
 					CP = 1;
 			}
 			j++;
 		}
 	}
-
 	if (!CP)
-	{
-		perror("Error\nThere's no player in the map\n");
-		return (1);
-	}
+		error_message("Error\nThere's no player in the map\n");
 	return (0);
 }
 
@@ -402,7 +260,7 @@ int			ft_fill_map(t_mapdata *mapinfo)
 	return (0);
 }
 
-void		reading_file(t_mapdata *mapinfo)
+int		reading_file(t_mapdata *mapinfo)
 {
 	char		*line;
 	int			ret;
@@ -416,7 +274,7 @@ void		reading_file(t_mapdata *mapinfo)
 	if (fd == -1)
 	{
 		perror("This file descriptor doesn't exist\n");
-		return ;
+		return (-1);
 	}
 
 	while (1)
@@ -453,31 +311,20 @@ void		reading_file(t_mapdata *mapinfo)
 				return (free_struct(mapinfo, line));
 		}
 		else if (MFR && param != 9)
-		{
-			perror("Error\nthe map should be the last element of the file\n");
-			return (free_struct(mapinfo, line));
-		}
+			error_message("Error\nthe map should be the last element of the file\n");
 		else if (MFR && param != 9)
-		{
-			perror("Error\nThe map should be the last element of the file\n");
-			return (free_struct(mapinfo, line));
-		}
+			error_message("Error\nThe map should be the last element of the file\n");
 		else if (MFR && ((ft_strchr("NWSE 02", line[i]) && line[i] != '\0') || (line[0] != ' ' && line[0] != '1')))
-		{
-			perror("Error\nempty line after the map\n");
-			return (free_struct(mapinfo, line));
-		}
+			error_message("Error\nempty line after the map\n");
 		if (ret == 0)
 			break ;
 	}
 	if (MAP_R == '\0')
-	{
-		perror("Error\nThere's no map\n");
-		return (free_struct(mapinfo, line));
-	}
+		error_message("Error\nThere's no map\n");
 	if (ft_fill_map(mapinfo))
-		return (free_struct(mapinfo, line));
+		return (-1);
 	// printf("%d\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%d\n", mapinfo->width, mapinfo->height, mapinfo->north_texture, mapinfo->south_texture, mapinfo->west_texture, mapinfo->east_texture, mapinfo->sprite_texture, mapinfo->ceilling_color[2], mapinfo->floor_color[2]);
 	free(line);
 	close(fd);
+    return (0);
 }
