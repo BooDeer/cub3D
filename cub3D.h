@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/03 23:45:37 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/09 12:08:29 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,38 @@
 #define TXTP g_mapinfo->texture_pointers
 #define TXT_W g_mapinfo->texture_width
 #define TXT_H g_mapinfo->texture_height
+#define FLOOR_COLOR g_mapinfo->floor
+#define CEILING_COLOR g_mapinfo->ceiling
+#define SPRITES g_mapinfo->sprites
+#define S_COUNT g_mapinfo->s_count
+#define S_HEIGHT g_mapinfo->sprite_height
+#define S_WIDTH g_mapinfo->sprite_width
 #define KEY_UP 13
 #define KEY_DOWN 1
 #define KEY_RIGHT 2
 #define KEY_LEFT 0
+
+// typedef struct s_sprite
+// {
+// 	float	x;
+// 	float	x_off;
+// 	float	y;
+// 	float	y_off;
+// 	float	dist;
+// 	float	size;
+// 	int		width;
+// 	int		height;
+// 	int		*sdata;
+// 	int		useless;
+// 	void	*simg;
+// }			t_sprite;
+
+typedef	struct s_sprite
+{
+	float	x;
+	float	y;
+	float	distance;
+}				t_sprite;
 
 typedef struct	s_list
 {
@@ -69,12 +97,19 @@ typedef struct	s_list
 	char	**map;
 	int		map_first_read;
 	int		check_player;
-    int     map_rows;
-    int     map_columns;
-    int    *map_textures[4]; // NO = 1 SO = 2 WE = 3 EA = 4
-    void   *texture_pointers[4];
-    int    texture_width[4];
-    int     texture_height[4];
+	int     map_rows;
+	int     map_columns;
+	int    *map_textures[4];
+	void   *texture_pointers[4];
+	int		sprite_width;
+	int		sprite_height;
+	int    texture_width[4];
+	int     texture_height[4];
+	unsigned long	floor;
+	unsigned long	ceiling;
+	// t_sprite		*sprites;
+	t_sprite		sprite[500];
+	int				s_count;
 }				t_mapdata;
 
 typedef struct player
@@ -112,21 +147,20 @@ typedef struct	s_rays
 	
 }	        t_ray;
 
-void	  	put_pixel(int x, int y, int color, void *img);
-int 		  reading_file(t_mapdata *mapinfo);
-void		  struct_init(point *pl);
-void		  ft_init(t_mapdata *mapinfo);
-void		  draw_square(int x, int y,int width,int color, point *pl);
-void		  draw_line(point *pl, int x1, int y1);
-int		  	reset_player(int key, point *pl);
-void		  castallRays(point *pl);
-void		  castRayy(float rayAngle, int id, point *pl);
-void		  renderRays(point *pl);
-void		  generate3dwalls(point *pl);
-void		  find_player(point *pl);
-int			  arr_size(char **arr);
-int 		  move_player(int key, point *pl);
-size_t		ft_strlen2(char *s);
+void			put_pixel(int x, int y, int color);
+int				reading_file(t_mapdata *mapinfo);
+void			struct_init(point *pl);
+void			ft_init(t_mapdata *mapinfo);
+void			draw_square(int x, int y,int width,int color, point *pl);
+int				reset_player(int key, point *pl);
+void			castallRays(point *pl);
+void			castRayy(float rayAngle, int id, point *pl);
+void			renderRays(point *pl);
+void			generate3dwalls(point *pl);
+void			find_player(point *pl);
+int				arr_size(char **arr);
+int				move_player(int key, point *pl);
+size_t			ft_strlen2(char *s);
 int				str_isdigit(char *str);
 int				arr_size(char **arr);
 int				free_struct(t_mapdata *mapinfo, char *line);
@@ -135,7 +169,8 @@ int				error_message(char *error);
 int				fill_color_values(char *arr, t_mapdata *mapinfo, int f_or_c, int i);
 t_mapdata 	*g_mapinfo;
 t_ray       *g_rays;
-
+int			*data;
+void		*buffer;
 
 
 

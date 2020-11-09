@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 22:37:38 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/03 23:38:30 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/06 09:31:04 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int				check_color_parametre(char *param)
 
 	i = -1;
 	while (param[++i] == ' ')
-		i++;
+		;
 	while (param[++i])
 	{
 		if (ft_isdigit(param[i]) || param[i] == ' ')

@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/04 00:11:50 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/06 10:24:00 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void		ft_init(t_mapdata *mapinfo)
 	MAP_R = ft_strdup("");
 	MFR = 0;
 	CP = 0;
+	S_COUNT = 0;
 }
 
 
@@ -58,8 +59,8 @@ int		ft_resolution(char *line, t_mapdata *mapinfo)
 	free(arr);
     if (WIDTH == 0 || HEIGHT == 0)
 			error_message("Error\nImpossible resolution\n");
-	(WIDTH >= 2560) ? WIDTH = 2560 : WIDTH;
-	(HEIGHT >= 1440) ? HEIGHT = 1440 : WIDTH;
+	(WIDTH >= 2860) ? WIDTH = 2860 : WIDTH;
+	(HEIGHT >= 1620) ? HEIGHT = 1620 : WIDTH;
 	(WIDTH < 10) ? WIDTH = 10 : WIDTH;
 	(HEIGHT < 10) ? HEIGHT = 10 : HEIGHT;
 	return (0);
@@ -124,9 +125,10 @@ int		ft_texture(char *line, t_mapdata *mapinfo)
 //	special characters or number below or over
 //	the value [0, 255].
 //
-
-
-
+unsigned long		ft_rgb_to_hex(int r, int g, int b)
+{
+	return (65536 * r + 256 * g + b);
+}
 
 int			ft_color_value(char *line, t_mapdata *mapinfo)
 {
@@ -155,6 +157,8 @@ int			ft_color_value(char *line, t_mapdata *mapinfo)
 				}
 		}
 	}
+	FLOOR_COLOR = ft_rgb_to_hex(F[0], F[1], F[2]);
+	CEILING_COLOR = ft_rgb_to_hex(C[0], C[1], C[2]);
 	return (0);
 }
 
@@ -193,6 +197,8 @@ int			ft_check_map(t_mapdata *mapinfo)
 					error_message("Error\nmap not closed\n");
 			if (MAP[i][j] == '0' || MAP[i][j] == '2' || MAP[i][j] == 'N' || MAP[i][j] == 'E' || MAP[i][j] == 'W' ||  MAP[i][j] == 'S' )
 			{
+				if (MAP[i][j] == '2')
+					S_COUNT++;
 				if ((!ft_strchr("120NEWS",MAP[i - 1][j]) || !ft_strchr("120NEWS",MAP[i + 1][j]) ||
 				!ft_strchr("120NEWS",MAP[i][j - 1])|| !ft_strchr("120NEWS",MAP[i][j + 1])))
 					error_message("Error\nthe map is not closed or it includes a wrong character\n");
