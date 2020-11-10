@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/09 12:08:29 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/09 12:22:38 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,27 +60,27 @@
 #define KEY_RIGHT 2
 #define KEY_LEFT 0
 
-// typedef struct s_sprite
-// {
-// 	float	x;
-// 	float	x_off;
-// 	float	y;
-// 	float	y_off;
-// 	float	dist;
-// 	float	size;
-// 	int		width;
-// 	int		height;
-// 	int		*sdata;
-// 	int		useless;
-// 	void	*simg;
-// }			t_sprite;
-
-typedef	struct s_sprite
+typedef struct s_sprite
 {
 	float	x;
+	float	x_off;
 	float	y;
-	float	distance;
-}				t_sprite;
+	float	y_off;
+	float	dist;
+	float	size;
+	int		width;
+	int		height;
+	int		*sdata;
+	int		useless;
+	void	*simg;
+}			t_sprite;
+
+// typedef	struct s_sprite
+// {
+// 	float	x;
+// 	float	y;
+// 	float	distance;
+// }				t_sprite;
 
 typedef struct	s_list
 {
@@ -107,8 +107,8 @@ typedef struct	s_list
 	int     texture_height[4];
 	unsigned long	floor;
 	unsigned long	ceiling;
-	// t_sprite		*sprites;
-	t_sprite		sprite[500];
+	t_sprite		*sprites;
+	// t_sprite		sprite[500];
 	int				s_count;
 }				t_mapdata;
 
@@ -167,6 +167,7 @@ int				free_struct(t_mapdata *mapinfo, char *line);
 int				check_color_parametre(char *param);
 int				error_message(char *error);
 int				fill_color_values(char *arr, t_mapdata *mapinfo, int f_or_c, int i);
+void			init_sprit(point *pl);
 t_mapdata 	*g_mapinfo;
 t_ray       *g_rays;
 int			*data;

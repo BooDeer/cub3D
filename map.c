@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/06 10:24:00 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/09 18:05:55 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,7 +250,7 @@ int         ft_fill_mapsp(t_mapdata *mapinfo)
             MAP[i][row_len] = '\0';
             free(tmp);
         }
-            printf("%s\n",MAP[i]);
+            //printf("%s\n",MAP[i]);
     }
     MAP_ROWS = row_len;
     MAP_COLUMNS = col_len;
