@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/09 12:22:38 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/11 13:43:54 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,9 @@
 #include "../cub3D/LIBFT/libft.h"
 
 
-#define MINIMAP_SCALE 0.25
-#define MAP_NUM_ROWS 11
-#define MAP_NUM_COLS 16
 #define TILE_SIZE 64
-#define WINDOW_WIDTH (TILE_SIZE * MAP_NUM_COLS)
-#define WINDOW_HEIGHT (TILE_SIZE * MAP_NUM_ROWS)
 #define FOV_ANGLE (60 * (M_PI / 180))
+# define DEG(x) ((180 / M_PI) * x)
 #define	WALL_WIDTH 1
 #define NUM_RAYS (WINDOW_WIDTH * WALL_WIDTH)
 #define WIDTH g_mapinfo->width

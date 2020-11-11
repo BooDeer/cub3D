@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/09 18:51:35 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/11 16:26:50 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,15 +91,15 @@ void	generate_sprites(int id, point *pl)
 	{
 		if (SPRITES[id].x_off + i < 0 || SPRITES[id].x_off + i > WIDTH)
 			continue ;
-		if (g_rays[(int)SPRITES[id].x_off + i].distance <= SPRITES[id].dist)
+		if ((int)g_rays[(int)SPRITES[id].x_off + i].distance <= SPRITES[id].dist)
 			continue ;
 		j = -1;
 		while (++j < size)
 		{
 			if (SPRITES[id].y_off + j < 0 || SPRITES[id].y_off + j > HEIGHT)
 				continue ;
-				// printf("%d====%d\n", i, j);
 			c = SPRITES->sdata[(int)((TILE_SIZE) * (TILE_SIZE * j / (int)size) + (TILE_SIZE * i / (int)size))];
+			printf("I don't know what's this but whatever: %d\n", SPRITES->sdata[(int)((TILE_SIZE) * (TILE_SIZE * j / (int)size) + (TILE_SIZE * i / (int)size))]);
 			if (c != SPRITES->sdata[0] && j + 1 <= size && i + 1 <= size && ((int)((j + SPRITES[id].y_off) *
 				WIDTH + (i + SPRITES[id].x_off)) < WIDTH * HEIGHT))
 				tmp[(int)((j + SPRITES[id].y_off) *
@@ -128,8 +128,10 @@ void	 draw_sprite(point *pl)
 		else
 			SPRITES[k].size = (WIDTH / SPRITES[k].dist) * TILE_SIZE;
 		SPRITES[k].y_off = HEIGHT / 2 - (int)SPRITES[k].size / 2;
-		SPRITES[k].x_off = ((angle * (M_PI / 180)) - (pl->rotationAngle * (M_PI / 180)) * WIDTH)
-							/ (float)TILE_SIZE + ((WIDTH / 2) - (int)SPRITES[k].size / 2);
+		SPRITES[k].x_off = ((DEG(angle) - DEG(pl->rotationAngle)) * WIDTH)
+		/ (float)TILE_SIZE + ((WIDTH / 2) - (int)SPRITES[k].size / 2);
+		// ((angle * (M_PI / 180)) - (pl->rotationAngle * (M_PI / 180)) * WIDTH)
+		// 					/ (float)TILE_SIZE + ((WIDTH / 2) - (int)SPRITES[k].size / 2);
 		generate_sprites(k, pl);
 			
 	}
@@ -145,37 +147,7 @@ void 	 draw_map(point *pl)
 	if (pl->rotationAngle < 0)
 		pl->rotationAngle += 2 * M_PI;
 	draw_sprite(pl);
-	// int x, y;
-	// static int check;
 
-	// for (int i = 0; i < MAP_ROWS; i++)
-	// {
-	// 	for (int j = 0; j < MAP_COLUMNS; j++)
-	// 	{
-	// 		if(MAP[j][i] == '1')
-	// 			draw_square(i * TILE_SIZE * MINIMAP_SCALE, j * TILE_SIZE * MINIMAP_SCALE, TILE_SIZE * MINIMAP_SCALE, 0xffff, pl);
-    //         else if (MAP[j][i] == '0')
-	// 			draw_square(i * TILE_SIZE * MINIMAP_SCALE,j * TILE_SIZE * MINIMAP_SCALE, TILE_SIZE * MINIMAP_SCALE, 0x000000, pl);
-	// 		else if (ft_strchr("NEWS", MAP[j][i]))
-	// 		{
-	// 			draw_square(i * TILE_SIZE * MINIMAP_SCALE , j * TILE_SIZE * MINIMAP_SCALE, TILE_SIZE * MINIMAP_SCALE, 0x000000, pl);
-				
-	// 			if (!check++)
-	// 			{
-	// 				x = (i * TILE_SIZE) + TILE_SIZE / 2;
-	// 				y = (j * TILE_SIZE) + TILE_SIZE / 2;
-	// 				pl->x = x;
-	// 				pl->y = y;
-	// 				put_pixel(MINIMAP_SCALE * x + cos(pl->rotationAngle),MINIMAP_SCALE * y, 0xff0000 + cos(pl->rotationAngle), pl->color_buffer_texture);
-	// 			}
-	// 		}
-			
-	// 	}
-
-	// 	draw_line(pl, (pl->x * MINIMAP_SCALE) + cos(pl->rotationAngle) * 50, (pl->y * MINIMAP_SCALE) + sin(pl->rotationAngle) * 50);
-	// }
-
-	// renderRays(pl);
 }
 
 void    ft_player_initial_pov(point *pl, int c)
@@ -266,11 +238,7 @@ void			generate3dwalls(point *pl)
 			tmp[i + (WIDTH * y)] = FLOOR_COLOR;
 	}
 }
-// void	renderRays(point *pl)
-// {
-// 	for (int i = 0; i < WIDTH; i++)
-// 		draw_line(pl, MINIMAP_SCALE * g_rays[i].wallHitX, MINIMAP_SCALE * g_rays[i].wallHitY);
-// }
+
 void	castRayy(float rayAngle, int id, point *pl)
 {
 	rayAngle = normalizeAngle(rayAngle);
@@ -475,19 +443,15 @@ void	init_sprit(point *pl)
 	SPRITES->simg = mlx_xpm_file_to_image(pl->mlx_ptr, SP, &S_WIDTH, &S_HEIGHT);
 	SPRITES->sdata = (int *)mlx_get_data_addr(SPRITES->simg,&SPRITES->useless, &SPRITES->useless, &SPRITES->useless);
 	while (MAP[++i] != 0 && (j = -1) && (k < S_COUNT))
-	{
 		while (MAP[i][++j] && (k < S_COUNT))
-		{
 			if (MAP[i][j] == '2')
 			{
-				SPRITES[k].x = (j + 0.5f) * TILE_SIZE;
-				SPRITES[k].y = (i + 0.5f) * TILE_SIZE;
+				SPRITES[k].x = (j + 0.5) * TILE_SIZE;
+				SPRITES[k].y = (i + 0.5) * TILE_SIZE;
 				SPRITES[k].dist = sqrtf(((SPRITES[k].x) - pl->x) * ((SPRITES[k].x) - pl->x) +
 				((SPRITES[k].y) - pl->y) * ((SPRITES[k].y) - pl->y));
 				k++;
 			}
-		}
-	}
 }
 
 int		main()
@@ -505,10 +469,6 @@ int		main()
     pl.win_ptr = mlx_new_window(pl.mlx_ptr,WIDTH, HEIGHT,"bruh");
     pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WIDTH,HEIGHT);
     struct_init(&pl);
-		//printf("%d=======%d\n", WIDTH, HEIGHT);
-    // pl.xpm_picture = mlx_xpm_file_to_image(pl.mlx_ptr, "picture_4.xpm", &pl.texture_width, &pl.texture_height);
-    //printf("%d===========\n",S_COUNT);
-    // pl.texture_buffer = (int *)mlx_get_data_addr(pl.xpm_picture, &useless, &useless, &useless);
     ft_fill_textures(&pl);
 	init_sprit(&pl);
     draw_map(&pl);
