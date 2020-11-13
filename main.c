@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/11 16:26:50 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/13 11:55:46 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,21 @@ int		Collision(int x, int y)
 	indexY = floor(indexY / TILE_SIZE);
 	// printf("%d============%d\n", indexX, indexY);
 	return (MAP[indexY][indexX] == '1');
+}
+
+int		Collision_player(int x, int y)
+{
+	int		indexX;
+	int		indexY;
+
+	indexX = x;
+	indexY = y;
+	if (indexX < 0 || indexX / TILE_SIZE > MAP_ROWS || indexY < 0 || indexY / TILE_SIZE > MAP_COLUMNS)
+		return (1);
+	indexX = floor(indexX / TILE_SIZE);	
+	indexY = floor(indexY / TILE_SIZE);
+	// printf("%d============%d\n", indexX, indexY);
+	return (MAP[indexY][indexX] == '1' || MAP[indexY][indexX] == '2');
 }
 
 float	normalizeAngle(float angle)
@@ -87,21 +102,20 @@ void	generate_sprites(int id, point *pl)
 	int		*tmp = (int *)mlx_get_data_addr(pl->color_buffer_texture, &k, &k, &k);
 	i = -1;
 	size = SPRITES[id].size;
-	while (++i < size)
+	while (++i < size - 1)
 	{
-		if (SPRITES[id].x_off + i < 0 || SPRITES[id].x_off + i > WIDTH)
+		if (SPRITES[id].x_off + i <= 0 || SPRITES[id].x_off + i >= WIDTH)
 			continue ;
 		if ((int)g_rays[(int)SPRITES[id].x_off + i].distance <= SPRITES[id].dist)
 			continue ;
 		j = -1;
-		while (++j < size)
+		while (++j < size - 1)
 		{
-			if (SPRITES[id].y_off + j < 0 || SPRITES[id].y_off + j > HEIGHT)
+			if (SPRITES[id].y_off + j <= 0 || SPRITES[id].y_off + j >= HEIGHT)
 				continue ;
 			c = SPRITES->sdata[(int)((TILE_SIZE) * (TILE_SIZE * j / (int)size) + (TILE_SIZE * i / (int)size))];
-			printf("I don't know what's this but whatever: %d\n", SPRITES->sdata[(int)((TILE_SIZE) * (TILE_SIZE * j / (int)size) + (TILE_SIZE * i / (int)size))]);
-			if (c != SPRITES->sdata[0] && j + 1 <= size && i + 1 <= size && ((int)((j + SPRITES[id].y_off) *
-				WIDTH + (i + SPRITES[id].x_off)) < WIDTH * HEIGHT))
+			// printf("I don't know what's this but whatever: %d\n", SPRITES->sdata[(int)((TILE_SIZE) * (TILE_SIZE * j / (int)size) + (TILE_SIZE * i / (int)size))]);
+			if (c != SPRITES->sdata[0])
 				tmp[(int)((j + SPRITES[id].y_off) *
 				WIDTH + (i + SPRITES[id].x_off))] = c;
 		}
@@ -130,6 +144,7 @@ void	 draw_sprite(point *pl)
 		SPRITES[k].y_off = HEIGHT / 2 - (int)SPRITES[k].size / 2;
 		SPRITES[k].x_off = ((DEG(angle) - DEG(pl->rotationAngle)) * WIDTH)
 		/ (float)TILE_SIZE + ((WIDTH / 2) - (int)SPRITES[k].size / 2);
+		// printf("The sprite's size: %f\n", SPRITES[k].x_off);
 		// ((angle * (M_PI / 180)) - (pl->rotationAngle * (M_PI / 180)) * WIDTH)
 		// 					/ (float)TILE_SIZE + ((WIDTH / 2) - (int)SPRITES[k].size / 2);
 		generate_sprites(k, pl);
@@ -367,8 +382,6 @@ void	castRayy(float rayAngle, int id, point *pl)
 
 int 	move_player(int key, point *pl)
 {
-
-	// printf("====ddddddd==== %d\n", key);
 	if (key == 13)
 		pl->walkDirection = 1;
 	if (key == 1)
@@ -386,15 +399,11 @@ int 	move_player(int key, point *pl)
 	moveStep = pl->walkDirection * pl->moveSpeed;
 	pl->x = pl->x + (cos(pl->rotationAngle) * moveStep);
 	pl->y = pl->y + (sin(pl->rotationAngle) * moveStep);
-	if (Collision(pl->x, oldPlayery))
+	if (Collision_player(pl->x, oldPlayery))
 		pl->x = oldPlayerx;
-	if (Collision(oldPlayerx, pl->y))
+	if (Collision_player(oldPlayerx, pl->y))
     	pl->y = oldPlayery;
-	mlx_destroy_image(pl->mlx_ptr, pl->color_buffer_texture);
-	pl->color_buffer_texture = mlx_new_image(pl->mlx_ptr, WIDTH, HEIGHT);
-	// mlx_clear_window(pl->mlx_ptr, pl->win_ptr);	
-	draw_map(pl);
-	mlx_put_image_to_window(pl->mlx_ptr, pl->win_ptr, pl->color_buffer_texture, 0, 0);
+
 	return 0;
 }
 
@@ -410,6 +419,10 @@ int		move_p(point *pl)
 	mlx_hook(pl->win_ptr, 2, 0, move_player, pl);
 	mlx_hook(pl->win_ptr, 3, 0, reset_player, pl);
 	mlx_hook(pl->win_ptr, 17, 0, close_window, pl);
+	mlx_destroy_image(pl->mlx_ptr, pl->color_buffer_texture);
+	pl->color_buffer_texture = mlx_new_image(pl->mlx_ptr, WIDTH, HEIGHT);
+	draw_map(pl);
+	mlx_put_image_to_window(pl->mlx_ptr, pl->win_ptr, pl->color_buffer_texture, 0, 0);
 
 	
 	return 0;
