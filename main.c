@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/13 11:55:46 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/15 12:22:59 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,13 @@ void	 sort_sprites(void)
 	}
 }
 
-void	generate_sprites(int id, point *pl)
+void	generate_sprites(int id)
 {
 	int		i;
 	int		j;
 	int		c;
 	float	size;
-	int 	k;
-	int		*tmp = (int *)mlx_get_data_addr(pl->color_buffer_texture, &k, &k, &k);
+
 	i = -1;
 	size = SPRITES[id].size;
 	while (++i < size - 1)
@@ -116,7 +115,7 @@ void	generate_sprites(int id, point *pl)
 			c = SPRITES->sdata[(int)((TILE_SIZE) * (TILE_SIZE * j / (int)size) + (TILE_SIZE * i / (int)size))];
 			// printf("I don't know what's this but whatever: %d\n", SPRITES->sdata[(int)((TILE_SIZE) * (TILE_SIZE * j / (int)size) + (TILE_SIZE * i / (int)size))]);
 			if (c != SPRITES->sdata[0])
-				tmp[(int)((j + SPRITES[id].y_off) *
+				BUFFER[(int)((j + SPRITES[id].y_off) *
 				WIDTH + (i + SPRITES[id].x_off))] = c;
 		}
 	}
@@ -147,7 +146,7 @@ void	 draw_sprite(point *pl)
 		// printf("The sprite's size: %f\n", SPRITES[k].x_off);
 		// ((angle * (M_PI / 180)) - (pl->rotationAngle * (M_PI / 180)) * WIDTH)
 		// 					/ (float)TILE_SIZE + ((WIDTH / 2) - (int)SPRITES[k].size / 2);
-		generate_sprites(k, pl);
+		generate_sprites(k);
 			
 	}
 }
@@ -210,9 +209,6 @@ void            ft_which_texture(int *txt, int i)
 }
 void			generate3dwalls(point *pl)
 {
-	int		*tmp;
-	int		k;
-	tmp = (int *)mlx_get_data_addr(pl->color_buffer_texture, &k, &k, &k);
 	int		textureOffsetX, textureOffsetY;
     int     txt;
 	for (int i = 0; i < WIDTH; i++)
@@ -230,7 +226,7 @@ void			generate3dwalls(point *pl)
 		wallBottomPixel = wallBottomPixel > HEIGHT ? HEIGHT : wallBottomPixel;
 
 		for (int y = 0; y < wallTopPixel; y++)
-            tmp[i + (WIDTH * y)] = CEILING_COLOR;
+            BUFFER[i + (WIDTH * y)] = CEILING_COLOR;
 		
         //// check achmen texture
         ft_which_texture(&txt, i);
@@ -246,11 +242,11 @@ void			generate3dwalls(point *pl)
 			
 			textureOffsetY = distanceFromTop * ((float)TXT_H[txt]/ wallStripHeight);
 
-			tmp[i + ((WIDTH) * y)] = TXT[txt][textureOffsetX + (textureOffsetY * TXT_W[txt])]; // ray_up && vertical , ray_up && horizontal, ray_down && vertical hit, ray_down && horiz
+			BUFFER[i + ((WIDTH) * y)] = TXT[txt][textureOffsetX + (textureOffsetY * TXT_W[txt])]; // ray_up && vertical , ray_up && horizontal, ray_down && vertical hit, ray_down && horiz
 
 		}
 		for (int y = wallBottomPixel; y < HEIGHT; y++)
-			tmp[i + (WIDTH * y)] = FLOOR_COLOR;
+			BUFFER[i + (WIDTH * y)] = FLOOR_COLOR;
 	}
 }
 
@@ -386,19 +382,24 @@ int 	move_player(int key, point *pl)
 		pl->walkDirection = 1;
 	if (key == 1)
 		pl->walkDirection = -1;
+	if (key == 2)
+		pl->turnDirection = 1;
+	if (key == 0)
+		pl->turnDirection = -1;
 	if (key == 53)
 		exit(1);
 		if (key == 124)
-			pl->rotationAngle += normalizeAngle(M_PI / 50);
+			pl->rotationAngle += normalizeAngle(5 * (M_PI / 180));
 		if (key == 123)
-			pl->rotationAngle -= normalizeAngle(M_PI / 50);
-
+			pl->rotationAngle -= normalizeAngle(5 * (M_PI / 180));
 	float	moveStep, oldPlayerx, oldPlayery;
 	oldPlayerx = pl->x;
 	oldPlayery = pl->y;
 	moveStep = pl->walkDirection * pl->moveSpeed;
-	pl->x = pl->x + (cos(pl->rotationAngle) * moveStep);
-	pl->y = pl->y + (sin(pl->rotationAngle) * moveStep);
+	pl->x = pl->x + ((cos(pl->rotationAngle)) * moveStep) +
+			(pl->turnDirection * ((cos(pl->rotationAngle + 90 * (M_PI / 180)) * pl->moveSpeed)));
+	pl->y = pl->y + (sin(pl->rotationAngle) * moveStep) +
+			(pl->turnDirection * ((sin(pl->rotationAngle + 90 * (M_PI / 180)) * pl->moveSpeed)));
 	if (Collision_player(pl->x, oldPlayery))
 		pl->x = oldPlayerx;
 	if (Collision_player(oldPlayerx, pl->y))
@@ -419,8 +420,6 @@ int		move_p(point *pl)
 	mlx_hook(pl->win_ptr, 2, 0, move_player, pl);
 	mlx_hook(pl->win_ptr, 3, 0, reset_player, pl);
 	mlx_hook(pl->win_ptr, 17, 0, close_window, pl);
-	mlx_destroy_image(pl->mlx_ptr, pl->color_buffer_texture);
-	pl->color_buffer_texture = mlx_new_image(pl->mlx_ptr, WIDTH, HEIGHT);
 	draw_map(pl);
 	mlx_put_image_to_window(pl->mlx_ptr, pl->win_ptr, pl->color_buffer_texture, 0, 0);
 
@@ -467,24 +466,33 @@ void	init_sprit(point *pl)
 			}
 }
 
-int		main()
+int		main(int argc, char **argv)
 {
 
 	point pl;
-	mapinfo = malloc(sizeof(t_mapdata));
-	if (!mapinfo)
+	int		useless;
+	if (argc != 2 && argc != 3)
+		return (error_message("Error\nWrong number of arguments given to the program\n"));
+
+	if (!(mapinfo = malloc(sizeof(t_mapdata))))
 		return (-1);
 	ft_init(mapinfo);
-	if (reading_file(mapinfo))
+	if (reading_file(argv[1]))
         return (-1);
     g_rays = (t_ray *)malloc(sizeof(t_ray) * WIDTH);
     pl.mlx_ptr = mlx_init();
     pl.win_ptr = mlx_new_window(pl.mlx_ptr,WIDTH, HEIGHT,"bruh");
     pl.color_buffer_texture = mlx_new_image(pl.mlx_ptr, WIDTH,HEIGHT);
+	BUFFER = (int *)mlx_get_data_addr(pl.color_buffer_texture, &useless, &useless, &useless);
     struct_init(&pl);
     ft_fill_textures(&pl);
 	init_sprit(&pl);
     draw_map(&pl);
+	if (argc == 3)
+	{
+		take_screenshot();
+		exit(1);
+	}
     mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
     mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
     mlx_loop(pl.mlx_ptr);

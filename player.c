@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 11:53:05 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/13 10:04:12 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/15 11:15:32 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	struct_init(point *pl)
 	pl->walkDirection = 0;
 	pl->moveSpeed = TILE_SIZE / 3;
 	pl->rotationSpeed = 2 * (M_PI / 180);
+	SCREEN = 0;
 }
 
 int		reset_player(int key, point *pl)

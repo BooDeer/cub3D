@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/11 13:43:54 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/14 14:20:52 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@
 #define S_COUNT g_mapinfo->s_count
 #define S_HEIGHT g_mapinfo->sprite_height
 #define S_WIDTH g_mapinfo->sprite_width
+#define SCREEN g_mapinfo->screen_shot
+#define	BUFFER buffer
 #define KEY_UP 13
 #define KEY_DOWN 1
 #define KEY_RIGHT 2
@@ -70,13 +72,6 @@ typedef struct s_sprite
 	int		useless;
 	void	*simg;
 }			t_sprite;
-
-// typedef	struct s_sprite
-// {
-// 	float	x;
-// 	float	y;
-// 	float	distance;
-// }				t_sprite;
 
 typedef struct	s_list
 {
@@ -104,8 +99,8 @@ typedef struct	s_list
 	unsigned long	floor;
 	unsigned long	ceiling;
 	t_sprite		*sprites;
-	// t_sprite		sprite[500];
 	int				s_count;
+	int				screen_shot;
 }				t_mapdata;
 
 typedef struct player
@@ -143,8 +138,28 @@ typedef struct	s_rays
 	
 }	        t_ray;
 
+typedef	struct	s_bmp_header
+{
+	char		bftype[3];
+	u_int32_t	bfsize;
+	u_int16_t	bfreserved1;
+	u_int16_t	bfreserved2;
+	u_int32_t	bfoffbits;
+	u_int32_t	bisize;
+	int32_t		biwidth;
+	int32_t		biheight;
+	u_int16_t	biplanes;
+	u_int16_t	bibitcount;
+	u_int32_t	bicompression;
+	u_int32_t	bisizeimage;
+	int32_t		bixpermeter;
+	int32_t		biypermeter;
+	u_int32_t	biclrused;
+	u_int32_t	biclrimportant;
+}				t_bmp_file;
+
 void			put_pixel(int x, int y, int color);
-int				reading_file(t_mapdata *mapinfo);
+int				reading_file(char *file);
 void			struct_init(point *pl);
 void			ft_init(t_mapdata *mapinfo);
 void			draw_square(int x, int y,int width,int color, point *pl);
@@ -164,10 +179,10 @@ int				check_color_parametre(char *param);
 int				error_message(char *error);
 int				fill_color_values(char *arr, t_mapdata *mapinfo, int f_or_c, int i);
 void			init_sprit(point *pl);
+void			take_screenshot();
 t_mapdata 	*g_mapinfo;
 t_ray       *g_rays;
-int			*data;
-void		*buffer;
+int			*buffer;
 
 
 

@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/09 18:05:55 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/15 11:45:15 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,7 +244,6 @@ int         ft_fill_mapsp(t_mapdata *mapinfo)
         {
             tmp = MAP[i];
             MAP[i] = (char *)malloc(sizeof(char) * row_len + 1);
-            // printf("%d====\n", c_len);
             ft_memset(MAP[i], ' ', row_len);
             ft_memcpy(MAP[i], tmp, ft_strlen(tmp));
             MAP[i][row_len] = '\0';
@@ -266,7 +265,7 @@ int			ft_fill_map(t_mapdata *mapinfo)
 	return (0);
 }
 
-int		reading_file(t_mapdata *mapinfo)
+int		reading_file(char *file)
 {
 	char		*line;
 	int			ret;
@@ -276,7 +275,7 @@ int		reading_file(t_mapdata *mapinfo)
 
 	i = 0;
 	param = 0;
-	fd = open("cube.cub", O_RDONLY);
+	fd = open(file, O_RDONLY);
 	if (fd == -1)
 	{
 		perror("This file descriptor doesn't exist\n");
@@ -324,6 +323,7 @@ int		reading_file(t_mapdata *mapinfo)
 			error_message("Error\nempty line after the map\n");
 		if (ret == 0)
 			break ;
+		free(line);
 	}
 	if (MAP_R == '\0')
 		error_message("Error\nThere's no map\n");
