@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Debug",
             "program": "/Users/hboudhir/Desktop/42_cursus/cub3D/a.out",
-            "args": [],
+            "args": ["cube.cub"],
             "cwd": "${workspaceFolder}"
         }
     ]

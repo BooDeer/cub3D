@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/15 12:22:59 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/18 17:16:18 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 #include <stdio.h>
 
 
-double	f_mod(double a, double b)
-{
-	return (a - (floor(a/b) * b));
-}
 
 
 int		Collision(int x, int y)
@@ -31,7 +27,6 @@ int		Collision(int x, int y)
 		return (1);
 	indexX = floor(indexX / TILE_SIZE);	
 	indexY = floor(indexY / TILE_SIZE);
-	// printf("%d============%d\n", indexX, indexY);
 	return (MAP[indexY][indexX] == '1');
 }
 
@@ -46,7 +41,6 @@ int		Collision_player(int x, int y)
 		return (1);
 	indexX = floor(indexX / TILE_SIZE);	
 	indexY = floor(indexY / TILE_SIZE);
-	// printf("%d============%d\n", indexX, indexY);
 	return (MAP[indexY][indexX] == '1' || MAP[indexY][indexX] == '2');
 }
 
@@ -113,7 +107,6 @@ void	generate_sprites(int id)
 			if (SPRITES[id].y_off + j <= 0 || SPRITES[id].y_off + j >= HEIGHT)
 				continue ;
 			c = SPRITES->sdata[(int)((TILE_SIZE) * (TILE_SIZE * j / (int)size) + (TILE_SIZE * i / (int)size))];
-			// printf("I don't know what's this but whatever: %d\n", SPRITES->sdata[(int)((TILE_SIZE) * (TILE_SIZE * j / (int)size) + (TILE_SIZE * i / (int)size))]);
 			if (c != SPRITES->sdata[0])
 				BUFFER[(int)((j + SPRITES[id].y_off) *
 				WIDTH + (i + SPRITES[id].x_off))] = c;
@@ -143,9 +136,6 @@ void	 draw_sprite(point *pl)
 		SPRITES[k].y_off = HEIGHT / 2 - (int)SPRITES[k].size / 2;
 		SPRITES[k].x_off = ((DEG(angle) - DEG(pl->rotationAngle)) * WIDTH)
 		/ (float)TILE_SIZE + ((WIDTH / 2) - (int)SPRITES[k].size / 2);
-		// printf("The sprite's size: %f\n", SPRITES[k].x_off);
-		// ((angle * (M_PI / 180)) - (pl->rotationAngle * (M_PI / 180)) * WIDTH)
-		// 					/ (float)TILE_SIZE + ((WIDTH / 2) - (int)SPRITES[k].size / 2);
 		generate_sprites(k);
 			
 	}
@@ -155,7 +145,7 @@ void 	 draw_map(point *pl)
 {
 
 
-	castallRays(pl);
+	castall_rays(pl);
 	generate3dwalls(pl);
 	pl->rotationAngle = fmod(pl->rotationAngle, 2 * M_PI);
 	if (pl->rotationAngle < 0)
@@ -196,59 +186,6 @@ void	find_player(point *pl)
 	}
 }
 
-void            ft_which_texture(int *txt, int i)
-{
-    if (g_rays[i].isRayFacingUp && !g_rays[i].wasHitVertical)
-        *txt = 0;
-    else if (g_rays[i].isRayFacingDown && !g_rays[i].wasHitVertical)
-        *txt = 1;
-    else if (g_rays[i].isRayFacingLeft&& g_rays[i].wasHitVertical)
-        *txt = 2;
-    else if (g_rays[i].isRayFacingRight&& g_rays[i].wasHitVertical)
-        *txt = 3;
-}
-void			generate3dwalls(point *pl)
-{
-	int		textureOffsetX, textureOffsetY;
-    int     txt;
-	for (int i = 0; i < WIDTH; i++)
-	{
-		float perpDistance = g_rays[i].distance * cos(g_rays[i].rayAngle - pl->rotationAngle);
-		float distanceProjPlane = (WIDTH / 2) / tan(FOV_ANGLE / 2);
-		float projectedWallHeight = (TILE_SIZE / perpDistance) * distanceProjPlane;
-
-		int		wallStripHeight = (int)projectedWallHeight;
-
-		int wallTopPixel = (HEIGHT / 2) - (wallStripHeight / 2);
-		wallTopPixel = wallTopPixel < 0 ? 0 : wallTopPixel;
-
-		int wallBottomPixel = (HEIGHT / 2) + (wallStripHeight / 2);
-		wallBottomPixel = wallBottomPixel > HEIGHT ? HEIGHT : wallBottomPixel;
-
-		for (int y = 0; y < wallTopPixel; y++)
-            BUFFER[i + (WIDTH * y)] = CEILING_COLOR;
-		
-        //// check achmen texture
-        ft_which_texture(&txt, i);
-        if (g_rays[i].wasHitVertical)
-			textureOffsetX = f_mod(g_rays[i].wallHitY, TILE_SIZE) * (TXT_W[txt] / TILE_SIZE);
-		else
-			textureOffsetX = f_mod(g_rays[i].wallHitX, TILE_SIZE)  * (TXT_W[txt] / TILE_SIZE);
-
-        
-		for (int y = wallTopPixel; y < wallBottomPixel; y++)
-		{
-			int		distanceFromTop = y +  (wallStripHeight / 2) - (HEIGHT / 2);
-			
-			textureOffsetY = distanceFromTop * ((float)TXT_H[txt]/ wallStripHeight);
-
-			BUFFER[i + ((WIDTH) * y)] = TXT[txt][textureOffsetX + (textureOffsetY * TXT_W[txt])]; // ray_up && vertical , ray_up && horizontal, ray_down && vertical hit, ray_down && horiz
-
-		}
-		for (int y = wallBottomPixel; y < HEIGHT; y++)
-			BUFFER[i + (WIDTH * y)] = FLOOR_COLOR;
-	}
-}
 
 void	castRayy(float rayAngle, int id, point *pl)
 {
@@ -291,7 +228,6 @@ void	castRayy(float rayAngle, int id, point *pl)
 		{
 			horzWallHitX = nextHorzTouchX;
 			horzWallHitY = nextHorzTouchY;
-			// horzWallContent = map[(int)floor(yToCheck / TILE_SIZE)][(int)floor(xToCheck / TILE_SIZE)];
 			foundHorzWallHit = 1;
 			break;
 		}
@@ -302,8 +238,6 @@ void	castRayy(float rayAngle, int id, point *pl)
 		}
 	
 	}
-	// put_pixel(horzWallHitX, horzWallHitY, 0xff0000, pl->color_buffer_texture);
-	// printf("=======|%d|=======\n", NUM_RAYS);
 	//////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////
@@ -338,7 +272,6 @@ void	castRayy(float rayAngle, int id, point *pl)
 		{
 			VertWallHitX = nextVertTouchX;
 			VertWallHitY = nextVertTouchY;
-			// VertWallContent = map[(int)floor(yToCheck / TILE_SIZE)][(int)floor(xToCheck / TILE_SIZE)];
 			foundVertWallHit = 1;
 			break;
 		}
@@ -426,18 +359,24 @@ int		move_p(point *pl)
 	
 	return 0;
 }
-
+void	free_textures(void)
+{
+	free(NO);
+	free(SO);
+	free(WE);
+	free(EA);
+}
 void    ft_fill_textures(point *pl)
 {
     int i;
 	int 	useless;
 
     i = -1;
-    //printf("%s=====\n%s======\n", NO, SO);
     TXTP[0] = mlx_xpm_file_to_image(pl->mlx_ptr, NO, &TXT_W[0], &TXT_H[0]);
     TXTP[1] = mlx_xpm_file_to_image(pl->mlx_ptr, SO, &TXT_W[1], &TXT_H[1]);
     TXTP[2] = mlx_xpm_file_to_image(pl->mlx_ptr, WE, &TXT_W[2], &TXT_H[2]);
     TXTP[3] = mlx_xpm_file_to_image(pl->mlx_ptr, EA, &TXT_W[3], &TXT_H[3]);
+	free_textures();
     while (++i < 4)
         TXT[i] = (int *)mlx_get_data_addr(TXTP[i],&useless, &useless, &useless); 
 }
@@ -453,6 +392,7 @@ void	init_sprit(point *pl)
 	if (!(SPRITES = malloc(sizeof(t_sprite) * (S_COUNT + 1))))
 		error_message("Error\nFailed to allocate memory");
 	SPRITES->simg = mlx_xpm_file_to_image(pl->mlx_ptr, SP, &S_WIDTH, &S_HEIGHT);
+	free(SP);
 	SPRITES->sdata = (int *)mlx_get_data_addr(SPRITES->simg,&SPRITES->useless, &SPRITES->useless, &SPRITES->useless);
 	while (MAP[++i] != 0 && (j = -1) && (k < S_COUNT))
 		while (MAP[i][++j] && (k < S_COUNT))
@@ -473,10 +413,10 @@ int		main(int argc, char **argv)
 	int		useless;
 	if (argc != 2 && argc != 3)
 		return (error_message("Error\nWrong number of arguments given to the program\n"));
-
 	if (!(mapinfo = malloc(sizeof(t_mapdata))))
-		return (-1);
-	ft_init(mapinfo);
+		return (error_message("Error\nError during a memory allocation\n"));
+	if(ft_init(mapinfo, argv[1]))
+		return(error_message("Error\nWrong file extension\n"));
 	if (reading_file(argv[1]))
         return (-1);
     g_rays = (t_ray *)malloc(sizeof(t_ray) * WIDTH);

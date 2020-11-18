@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/15 11:45:15 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/18 14:01:25 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,16 @@
 
 // Check the extension of the texture files.
 
-
-void		ft_init(t_mapdata *mapinfo)
+int		check_map_extension(char *extension)
 {
+	if (ft_strncmp(&extension[ft_strlen(extension) - 4], ".cub", 4))
+		return (-1);
+	return (0);
+}
+int		ft_init(t_mapdata *mapinfo,char *extension)
+{
+	if(check_map_extension(extension))
+		return (-1);
 	WIDTH = -1;
 	HEIGHT = -1;
 	SO = NULL;
@@ -34,6 +41,7 @@ void		ft_init(t_mapdata *mapinfo)
 	MFR = 0;
 	CP = 0;
 	S_COUNT = 0;
+	return (0);
 }
 
 
@@ -42,7 +50,9 @@ void		ft_init(t_mapdata *mapinfo)
 int		ft_resolution(char *line, t_mapdata *mapinfo)
 {
 	char	**arr = ft_split(line, ' ');
+	int		i;
 
+	i = -1;
 	if (arr_size(arr) != 3)
 		error_message("Error.\nwrong number of arguments.\n");
 	if (line[1] != ' ' && line)
@@ -56,6 +66,8 @@ int		ft_resolution(char *line, t_mapdata *mapinfo)
 		WIDTH = ft_atoi(arr[1]);
 		HEIGHT = ft_atoi(arr[2]);
 	}
+	while (arr[++i])
+		free(arr[i]);
 	free(arr);
     if (WIDTH == 0 || HEIGHT == 0)
 			error_message("Error\nImpossible resolution\n");
@@ -76,8 +88,8 @@ int		ft_texture(char *line, t_mapdata *mapinfo)
 		error_message("Error.\nwrong number of arguments");
 	if (line[2] != ' ' && *arr[0] != 'S')
 		error_message("Error.\nno space after the parametre.\n");
-	if (open(ft_strtrim(arr[1], "\'"), O_RDONLY) == -1)
-		error_message("Error.\ntexture file not found");
+	if (open(arr[1], O_RDONLY) == -1)
+		return(error_message("Error.\ntexture file not found"));
 	else
 	{
 		if (line[0] == 'S' && line[1] == 'O')
@@ -150,12 +162,16 @@ int			ft_color_value(char *line, t_mapdata *mapinfo)
 			else
 				if (fill_color_values(arr[i], mapinfo, line[0], i))
 				{
-					while(i)
+					while(arr[i])
 						free(arr[i--]);
 					free(arr);
 					return (-1);
 				}
 		}
+		i = -1;
+		while (arr[++i])
+			free(arr[i]);
+		free(arr);
 	}
 	FLOOR_COLOR = ft_rgb_to_hex(F[0], F[1], F[2]);
 	CEILING_COLOR = ft_rgb_to_hex(C[0], C[1], C[2]);
@@ -178,7 +194,7 @@ int			ft_read_map(char *line, t_mapdata *mapinfo)
 	return (0);
 }
 
-int			ft_check_map(t_mapdata *mapinfo)
+int			ft_check_map()
 {
 	int		i;
 	int		j;
@@ -249,7 +265,6 @@ int         ft_fill_mapsp(t_mapdata *mapinfo)
             MAP[i][row_len] = '\0';
             free(tmp);
         }
-            //printf("%s\n",MAP[i]);
     }
     MAP_ROWS = row_len;
     MAP_COLUMNS = col_len;
@@ -259,7 +274,8 @@ int         ft_fill_mapsp(t_mapdata *mapinfo)
 int			ft_fill_map(t_mapdata *mapinfo)
 {
 	MAP = ft_split(MAP_R, '\n');
-	if (ft_check_map(mapinfo))
+	free(MAP_R);
+	if (ft_check_map())
 		return (1);
     ft_fill_mapsp(mapinfo);
 	return (0);
@@ -329,7 +345,6 @@ int		reading_file(char *file)
 		error_message("Error\nThere's no map\n");
 	if (ft_fill_map(mapinfo))
 		return (-1);
-	// printf("%d\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%d\n", mapinfo->width, mapinfo->height, mapinfo->north_texture, mapinfo->south_texture, mapinfo->west_texture, mapinfo->east_texture, mapinfo->sprite_texture, mapinfo->ceilling_color[2], mapinfo->floor_color[2]);
 	free(line);
 	close(fd);
     return (0);

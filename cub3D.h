@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/14 14:20:52 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/18 17:12:38 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,10 +161,10 @@ typedef	struct	s_bmp_header
 void			put_pixel(int x, int y, int color);
 int				reading_file(char *file);
 void			struct_init(point *pl);
-void			ft_init(t_mapdata *mapinfo);
+int				ft_init(t_mapdata *mapinfo, char *extension);
 void			draw_square(int x, int y,int width,int color, point *pl);
 int				reset_player(int key, point *pl);
-void			castallRays(point *pl);
+void			castall_rays(point *pl);
 void			castRayy(float rayAngle, int id, point *pl);
 void			renderRays(point *pl);
 void			generate3dwalls(point *pl);
