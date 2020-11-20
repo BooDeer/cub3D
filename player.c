@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 11:53:05 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/19 11:31:06 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/20 14:00:43 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ void	struct_init(point *pl)
 	pl->radius = 3;
 	pl->turnDirection = 0;
 	pl->walkDirection = 0;
-	pl->moveSpeed = TILE_SIZE / 3;
+	pl->moveSpeed = TILE_SIZE / 9;
 	pl->rotationSpeed = 2 * (M_PI / 180);
+	pl->rotationSpeed = 0;
+	pl->turnSpeed = 5 * (M_PI / 180);
 	SCREEN = 0;
 }
 
@@ -29,6 +31,8 @@ int		reset_player(int key, point *pl)
 		pl->walkDirection = 0;
 	if (key == 2 || key == 0)
 		pl->turnDirection = 0;
+	if (key == 124 || key == 123)
+		pl->rotationSpeed = 0;
 	return (0);
 }
 

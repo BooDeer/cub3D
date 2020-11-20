@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/19 11:31:13 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/20 13:47:27 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/20 13:59:17 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void		find_player(point *pl)
 	}
 }
 
-static void	check_key(int key, point *pl)
+int			move_player(int key, point *pl)
 {
 	if (key == 13)
 		pl->walkDirection = 1;
@@ -45,30 +45,8 @@ static void	check_key(int key, point *pl)
 	if (key == 53)
 		exit(1);
 	if (key == 124)
-		pl->rotationAngle += normalize_angle(5 * (M_PI / 180));
+		pl->rotationSpeed = 1;
 	if (key == 123)
-		pl->rotationAngle -= normalize_angle(5 * (M_PI / 180));
-}
-
-int			move_player(int key, point *pl)
-{
-	float	move_step;
-	float	old_playerx;
-	float	old_playery;
-
-	check_key(key, pl);
-	old_playerx = pl->x;
-	old_playery = pl->y;
-	move_step = pl->walkDirection * pl->moveSpeed;
-	pl->x = pl->x + (cos(pl->rotationAngle) * move_step) +
-			(pl->turnDirection * ((cos(pl->rotationAngle +
-			90 * (M_PI / 180)) * pl->moveSpeed)));
-	pl->y = pl->y + (sin(pl->rotationAngle) * move_step) +
-			(pl->turnDirection * ((sin(pl->rotationAngle +
-			90 * (M_PI / 180)) * pl->moveSpeed)));
-	if (collision_player(pl->x, old_playery))
-		pl->x = old_playerx;
-	if (collision_player(old_playerx, pl->y))
-		pl->y = old_playery;
+		pl->rotationSpeed = -1;
 	return (0);
 }
