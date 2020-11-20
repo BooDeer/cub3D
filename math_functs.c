@@ -1,37 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   drawing.c                                          :+:      :+:    :+:   */
+/*   math_functs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/05 18:29:36 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/18 18:41:08 by hboudhir         ###   ########.fr       */
+/*   Created: 2020/11/18 17:51:54 by hboudhir          #+#    #+#             */
+/*   Updated: 2020/11/18 17:53:56 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-void		castall_rays(point *pl)
+float	normalize_angle(float angle)
 {
-	float		ray_angle;
-	int			i;
-
-	ray_angle = pl->rotationAngle - (FOV_ANGLE / 2);
-	i = -1;
-	while (++i < WIDTH)
-	{
-		castRayy(ray_angle, i, pl);
-		ray_angle += FOV_ANGLE / WIDTH;
-	}
+	angle = remainder(angle, 2 * M_PI);
+	if (angle < 0)
+		angle += 2 * M_PI;
+	return (angle);
 }
 
-void		draw_map(point *pl)
+float	distance_between_points(float x1, float y1, float x2, float y2)
 {
-	castall_rays(pl);
-	generate3dwalls(pl);
-	pl->rotationAngle = fmod(pl->rotationAngle, 2 * M_PI);
-	if (pl->rotationAngle < 0)
-		pl->rotationAngle += 2 * M_PI;
-	draw_sprite(pl);
+	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }

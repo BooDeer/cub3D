@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/18 17:12:38 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/19 14:47:20 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,33 @@ typedef struct	s_rays
 	
 }	        t_ray;
 
+typedef struct s_raynorm
+{
+	int		is_rayfacingdown;
+	int		is_rayfacingup;
+	int		is_rayfacingright;
+	int		is_rayfacingleft;
+	float	xintercept;
+	float	yintercept;
+	float	xstep;
+	float	ystep;
+	int		found_horzwallhit;
+	float	horz_wallhitx;
+	float	horzwallhity;
+	int		horzwallcontent;
+	float	nexthorztouchx;
+	float 	nexthorztouchy;
+	float 	xtocheck;
+	float 	ytocheck;
+	int		foundvertwallhit;
+	float	vertwallhitx;
+	float	vertwallhity;
+	int		vertwallcontent;
+	float 	nextVertTouchX;
+	float 	nextVertTouchY;
+	float 	horzHitDistance;
+	float 	vertHitDistance;
+}		t_raynorm;
 typedef	struct	s_bmp_header
 {
 	char		bftype[3];
@@ -158,6 +185,30 @@ typedef	struct	s_bmp_header
 	u_int32_t	biclrimportant;
 }				t_bmp_file;
 
+typedef struct s_walls
+{
+	int		i;
+	int		j;
+	int		offsetx;
+	int		offsety;
+    int     txt;
+	float 	perp_distance;
+	float 	distance_projplane;
+	float 	projected_wall_height;
+	int		wall_stripheight;
+	int 	wall_top_pixel;
+	int 	wall_bottompixel;
+	int		distance_fromtop;
+}			t_walls;
+
+typedef struct s_var
+{
+	int		i;
+	int		j;
+	int		c;
+	float	size;
+}			t_var;
+
 void			put_pixel(int x, int y, int color);
 int				reading_file(char *file);
 void			struct_init(point *pl);
@@ -165,7 +216,7 @@ int				ft_init(t_mapdata *mapinfo, char *extension);
 void			draw_square(int x, int y,int width,int color, point *pl);
 int				reset_player(int key, point *pl);
 void			castall_rays(point *pl);
-void			castRayy(float rayAngle, int id, point *pl);
+void			castRayy(float ray_angle, int id, point *pl);
 void			renderRays(point *pl);
 void			generate3dwalls(point *pl);
 void			find_player(point *pl);
@@ -180,6 +231,15 @@ int				error_message(char *error);
 int				fill_color_values(char *arr, t_mapdata *mapinfo, int f_or_c, int i);
 void			init_sprit(point *pl);
 void			take_screenshot();
+int				collision(int x, int y);
+int				collision_player(int x, int y);
+float			normalize_angle(float angle);
+float			distance_between_points(float x1, float y1, float x2, float y2);
+void			draw_sprite(point *pl);
+void			ft_player_initial_pov(point *pl, int c);
+void			draw_map(point *pl);
+void			find_player(point *pl);
+int				move_player(int key, point *pl);
 t_mapdata 	*g_mapinfo;
 t_ray       *g_rays;
 int			*buffer;
