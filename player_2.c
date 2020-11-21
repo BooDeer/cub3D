@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/19 11:31:13 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/20 13:59:17 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/20 17:58:36 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,30 @@ int			move_player(int key, point *pl)
 	if (key == 123)
 		pl->rotationSpeed = -1;
 	return (0);
+}
+
+void		update_player(point *pl)
+{
+	float	move_step;
+	float	old_playerx;
+	float	old_playery;
+
+	old_playerx = pl->x;
+	old_playery = pl->y;
+	move_step = pl->walkDirection * pl->moveSpeed;
+	pl->rotationAngle += pl->rotationSpeed * pl->turnSpeed;
+	pl->rotationAngle = normalize_angle(pl->rotationAngle);
+	pl->x = pl->x + ((cos(pl->rotationAngle)) * move_step) +
+			(pl->turnDirection * ((cos(pl->rotationAngle +
+			90 * (M_PI / 180)) * pl->moveSpeed)));
+	pl->y = pl->y + (sin(pl->rotationAngle) * move_step) +
+			(pl->turnDirection * ((sin(pl->rotationAngle +
+			90 * (M_PI / 180)) * pl->moveSpeed)));
+	if (collision_player(pl->x, old_playery))
+		pl->x = old_playerx;
+	if (collision_player(old_playerx, pl->y))
+		pl->y = old_playery;
+	draw_map(pl);
+	mlx_put_image_to_window(pl->mlx_ptr, pl->win_ptr,
+	pl->color_buffer_texture, 0, 0);
 }

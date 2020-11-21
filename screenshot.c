@@ -6,13 +6,13 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/14 13:39:49 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/14 14:15:32 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/20 17:39:05 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-static	int		create_file(char *file_name)
+static	int			create_file(char *file_name)
 {
 	int	fd;
 
@@ -22,7 +22,7 @@ static	int		create_file(char *file_name)
 	return (fd);
 }
 
-static	void	head_make(t_bmp_file *info_bmp_file)
+static	void		head_make(t_bmp_file *info_bmp_file)
 {
 	info_bmp_file->bftype[0] = 0x42;
 	info_bmp_file->bftype[1] = 0x4D;
@@ -42,7 +42,7 @@ static	void	head_make(t_bmp_file *info_bmp_file)
 	info_bmp_file->biclrimportant = 0;
 }
 
-static	void	head_write(int fd, t_bmp_file info_bmp_file)
+static	void		head_write(int fd, t_bmp_file info_bmp_file)
 {
 	int			r;
 
@@ -65,7 +65,7 @@ static	void	head_write(int fd, t_bmp_file info_bmp_file)
 	(void)r;
 }
 
-static	void	file_write(int fd, int imagesize)
+static	void		file_write(int fd, int imagesize)
 {
 	char	*pixel_array;
 	int		i;
@@ -82,16 +82,16 @@ static	void	file_write(int fd, int imagesize)
 		pixel_array[j++] = (BUFFER[i] & 255 << 8) >> 8;
 		pixel_array[j++] = (BUFFER[i] & 255 << 16) >> 16;
 		pixel_array[j++] = 0;
-		i++;		
+		i++;
 	}
-	j = write(fd, pixel_array, imagesize *=4);
+	j = write(fd, pixel_array, imagesize *= 4);
 	free(pixel_array);
 }
 
-void	take_screenshot()
+void				take_screenshot(void)
 {
-	t_bmp_file info_bmp_file;
-	int			fd;
+	t_bmp_file		info_bmp_file;
+	int				fd;
 
 	ft_bzero(&info_bmp_file, sizeof(t_bmp_file));
 	fd = create_file("screenshot.bmp");

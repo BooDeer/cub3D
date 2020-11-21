@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/20 13:55:20 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/20 17:41:32 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,7 +216,7 @@ int				ft_init(t_mapdata *mapinfo, char *extension);
 void			draw_square(int x, int y,int width,int color, point *pl);
 int				reset_player(int key, point *pl);
 void			castall_rays(point *pl);
-void			castRayy(float ray_angle, int id, point *pl);
+void			cast_rayy(float ray_angle, int id, point *pl);
 void			renderRays(point *pl);
 void			generate3dwalls(point *pl);
 void			find_player(point *pl);
@@ -230,7 +230,7 @@ int				check_color_parametre(char *param);
 int				error_message(char *error);
 int				fill_color_values(char *arr, t_mapdata *mapinfo, int f_or_c, int i);
 void			init_sprit(point *pl);
-void			take_screenshot();
+void			take_screenshot(void);
 int				collision(int x, int y);
 int				collision_player(int x, int y);
 float			normalize_angle(float angle);
@@ -240,6 +240,8 @@ void			ft_player_initial_pov(point *pl, int c);
 void			draw_map(point *pl);
 void			find_player(point *pl);
 int				move_player(int key, point *pl);
+void			fill_rays(t_raynorm *ray, point *pl, int id, float ray_angle);
+void			update_player(point *pl);
 t_mapdata 	*g_mapinfo;
 t_ray       *g_rays;
 int			*buffer;

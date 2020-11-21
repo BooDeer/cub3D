@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 18:29:36 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/18 18:41:08 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/20 17:29:19 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void		castall_rays(point *pl)
 	i = -1;
 	while (++i < WIDTH)
 	{
-		castRayy(ray_angle, i, pl);
+		cast_rayy(ray_angle, i, pl);
 		ray_angle += FOV_ANGLE / WIDTH;
 	}
 }

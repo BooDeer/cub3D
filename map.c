@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/18 14:01:25 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/21 18:13:44 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,9 @@ int		ft_resolution(char *line, t_mapdata *mapinfo)
 		WIDTH = ft_atoi(arr[1]);
 		HEIGHT = ft_atoi(arr[2]);
 	}
-	while (arr[++i])
-		free(arr[i]);
+	free(arr[0]);
+	free(arr[1]);
+	free(arr[2]);
 	free(arr);
     if (WIDTH == 0 || HEIGHT == 0)
 			error_message("Error\nImpossible resolution\n");
@@ -231,7 +232,7 @@ int			ft_check_map()
 	return (0);
 }
 
-int         ft_fill_mapsp(t_mapdata *mapinfo)
+int         ft_fill_mapsp()
 {
     int     len;
     int     i;
@@ -271,13 +272,13 @@ int         ft_fill_mapsp(t_mapdata *mapinfo)
     return (0);
 }
 
-int			ft_fill_map(t_mapdata *mapinfo)
+int			ft_fill_map()
 {
 	MAP = ft_split(MAP_R, '\n');
 	free(MAP_R);
 	if (ft_check_map())
 		return (1);
-    ft_fill_mapsp(mapinfo);
+    ft_fill_mapsp();
 	return (0);
 }
 
@@ -288,16 +289,11 @@ int		reading_file(char *file)
 	int			fd;
 	int			i;
 	int			param;
-
 	i = 0;
 	param = 0;
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
-	{
-		perror("This file descriptor doesn't exist\n");
-		return (-1);
-	}
-
+		return (error_message("Error\nThis file descriptor doesn't exist\n"));
 	while (1)
 	{
 		if (param == 8)
@@ -343,7 +339,7 @@ int		reading_file(char *file)
 	}
 	if (MAP_R == '\0')
 		error_message("Error\nThere's no map\n");
-	if (ft_fill_map(mapinfo))
+	if (ft_fill_map())
 		return (-1);
 	free(line);
 	close(fd);
