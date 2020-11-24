@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/14 13:39:49 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/20 17:39:05 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/24 17:20:13 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,4 +100,5 @@ void				take_screenshot(void)
 	file_write(fd, info_bmp_file.bisizeimage);
 	close(fd);
 	(void)info_bmp_file;
+	exit(1);
 }

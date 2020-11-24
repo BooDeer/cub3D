@@ -11,7 +11,7 @@ EA ./picture_4.xpm
 
 S ./sprite.xpm
 
-F 0,0,14
+F 110,40,40
 
 C 0,0,245
 

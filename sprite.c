@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 17:54:20 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/18 18:07:31 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/23 19:00:53 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void		sort_sprites(void)
 	float	tmp_y;
 
 	i = -1;
-	while (++i < S_COUNT)
+	while (++i < S_COUNT - 1)
 	{
-		j = -1;
-		while (++j < S_COUNT - i)
+		j = i;
+		while (++j < S_COUNT - 1)
 			if (SPRITES[j].dist < SPRITES[j + 1].dist)
 			{
 				tmp_dist = SPRITES[j].dist;

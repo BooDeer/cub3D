@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 09:55:00 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/20 17:41:32 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/24 17:31:26 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 #include <mlx.h>
 #include <math.h>
 #include <limits.h>
-#include "../cub3D/GNL/get_next_line.h"
-#include "../cub3D/LIBFT/libft.h"
+#include "get_next_line/get_next_line.h"
+#include "libft/libft.h"
 
 
 #define TILE_SIZE 64
@@ -209,6 +209,25 @@ typedef struct s_var
 	float	size;
 }			t_var;
 
+typedef struct s_fmap
+{
+	int		len;
+	int		i;
+	int		j;
+	int		row_len;
+	int		col_len;
+	char	*tmp;
+}				t_fmap;
+
+typedef struct s_map_p
+{
+	char		*line;
+	int			ret;
+	int			fd;
+	int			i;
+	int			param;	
+}				t_map_p;
+
 void			put_pixel(int x, int y, int color);
 int				reading_file(char *file);
 void			struct_init(point *pl);
@@ -242,6 +261,14 @@ void			find_player(point *pl);
 int				move_player(int key, point *pl);
 void			fill_rays(t_raynorm *ray, point *pl, int id, float ray_angle);
 void			update_player(point *pl);
+int				ft_init(t_mapdata *mapinfo, char *extension);
+int				ft_resolution(char *line, t_mapdata *mapinfo);
+unsigned long	ft_rgb_to_hex(int r, int g, int b);
+int				ft_texture(char *line, t_mapdata *mapinfo);
+int				ft_read_map(char *line, t_mapdata *mapinfo);
+int				ft_color_value(char *line, t_mapdata *mapinfo);
+int				ft_fill_map(void);
+int        		ft_fill_mapsp(void);
 t_mapdata 	*g_mapinfo;
 t_ray       *g_rays;
 int			*buffer;
