@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 11:53:05 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/25 11:09:12 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/25 18:24:22 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	struct_init(t_point *pl)
 	pl->radius = 3;
 	pl->turn_direction = 0;
 	pl->walk_direction = 0;
-	pl->move_speed = TILE_SIZE / 9;
+	pl->move_speed = TILE_SIZE / 10;
 	pl->rotation_speed = 2 * (M_PI / 180);
 	pl->rotation_speed = 0;
 	pl->turn_speed = 4 * (M_PI / 180);

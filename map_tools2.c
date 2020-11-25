@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 23:38:44 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/24 18:47:37 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/25 17:53:08 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int					error_message(char *error)
 {
 	perror(error);
+	exit(1);
 	return (-1);
 }
 

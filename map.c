@@ -6,7 +6,7 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/24 18:49:06 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/25 18:31:58 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,19 +55,16 @@ int			ft_fill_mapsp(void)
 
 void		check_arg_map(char *line, int *param, int i)
 {
-	if ((line[i] == '1' || line[i] == ' '))
-	{
-		ft_read_map(line);
-	}
-	else if (MFR && *param != 9)
-		error_message("Error\nthe map should be the last element of\
-		the file\n");
-	else if (MFR && *param != 9)
+	if (MFR && *param != 9)
 		error_message("Error\nThe map should be the last element of\
 		the file\n");
+	else if (MFR && *param < 8)
+		error_message("Error\nWrong number of arguments");
+	else if ((line[i] == '1' || line[i] == ' '))
+		ft_read_map(line);
 	else if (MFR && ((ft_strchr("NWSE 02", line[i]) && line[i] != '\0') ||
 	(line[0] != ' ' && line[0] != '1')))
-		error_message("Error\nempty line after the map\n");
+		error_message("Error\nempty line or wrong character after the map\n");
 }
 
 void		check_argument(char *line, int *param, int i)
