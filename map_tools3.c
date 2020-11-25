@@ -6,11 +6,11 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/21 18:39:29 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/23 16:42:11 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/24 18:47:43 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3d.h"
 
 int		check_resolution(void)
 {
@@ -23,7 +23,7 @@ int		check_resolution(void)
 	return (0);
 }
 
-int		ft_resolution(char *line, t_mapdata *mapinfo)
+int		ft_resolution(char *line)
 {
 	char	**arr;
 	int		i;
@@ -79,7 +79,7 @@ void	texture_path(char *line, char **arr)
 	}
 }
 
-int		ft_texture(char *line, t_mapdata *mapinfo)
+int		ft_texture(char *line)
 {
 	char	**arr;
 	int		i;
@@ -108,7 +108,7 @@ int		ft_texture(char *line, t_mapdata *mapinfo)
 	return (0);
 }
 
-int		ft_read_map(char *line, t_mapdata *mapinfo)
+int		ft_read_map(char *line)
 {
 	char *tmp;
 

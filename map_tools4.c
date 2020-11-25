@@ -6,11 +6,11 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 16:42:52 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/23 17:44:06 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/24 18:49:28 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3d.h"
 
 void		check_colors(char *line, char **arr)
 {
@@ -24,7 +24,7 @@ void		check_colors(char *line, char **arr)
 		if (check_color_parametre(arr[i]))
 			error_message("Error.\nColor parametre contains non-numeric\
 			characters\n");
-		else if (fill_color_values(arr[i], mapinfo, line[0], i))
+		else if (fill_color_values(arr[i], line[0], i))
 		{
 			while (arr[i])
 				free(arr[i--]);
@@ -34,7 +34,7 @@ void		check_colors(char *line, char **arr)
 	}
 }
 
-int			ft_color_value(char *line, t_mapdata *mapinfo)
+int			ft_color_value(char *line)
 {
 	char	**arr;
 	int		i;

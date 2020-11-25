@@ -6,17 +6,17 @@
 #    By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/25 09:27:51 by hboudhir          #+#    #+#              #
-#    Updated: 2020/11/02 23:32:58 by hboudhir         ###   ########.fr        #
+#    Updated: 2020/11/25 13:18:35 by hboudhir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-CC = gccc
+CC = gcc
 AR = ar
-NAME = cub3D.a
-LIB = cub3D.h
+NAME = cub3d.a
+LIB = cub3d.h
 flags = -Wall -Wextra -Werror
-FILES =
+FILES = 
 OBJ =
 
 all: $(NAME)

@@ -6,26 +6,17 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/04 08:12:18 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/24 17:24:21 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/25 11:03:08 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3d.h"
 #include <stdio.h>
 
 int		close_window(int key)
 {
 	exit(1);
 	return (key);
-}
-
-int		move_p(point *pl)
-{
-	mlx_hook(pl->win_ptr, 2, 0, move_player, pl);
-	mlx_hook(pl->win_ptr, 3, 0, reset_player, pl);
-	mlx_hook(pl->win_ptr, 17, 0, close_window, pl);
-	update_player(pl);
-	return (0);
 }
 
 void	free_textures(void)
@@ -36,7 +27,7 @@ void	free_textures(void)
 	free(EA);
 }
 
-void	ft_fill_textures(point *pl)
+void	ft_fill_textures(t_point *pl)
 {
 	int		i;
 	int		useless;
@@ -52,43 +43,44 @@ void	ft_fill_textures(point *pl)
 	&useless, &useless);
 }
 
-void	init_mlx_stuff(point *pl)
+void	init_mlx_stuff(t_point *pl)
 {
 	int			useless;
 
 	g_rays = (t_ray *)malloc(sizeof(t_ray) * WIDTH);
-    pl->mlx_ptr = mlx_init();
-    pl->win_ptr = mlx_new_window(pl->mlx_ptr,WIDTH, HEIGHT,"bruh");
-    pl->color_buffer_texture = mlx_new_image(pl->mlx_ptr, WIDTH,HEIGHT);
+	pl->mlx_ptr = mlx_init();
+	pl->win_ptr = mlx_new_window(pl->mlx_ptr, WIDTH, HEIGHT, "bruh");
+	pl->color_buffer_texture = mlx_new_image(pl->mlx_ptr, WIDTH, HEIGHT);
 	BUFFER = (int *)mlx_get_data_addr(pl->color_buffer_texture, &useless,
 	&useless, &useless);
-    struct_init(pl);
-    ft_fill_textures(pl);
-	init_sprit(pl);	
+	struct_init(pl);
+	ft_fill_textures(pl);
+	init_sprit(pl);
 }
 
 int		main(int argc, char **argv)
 {
-	point		pl;
+	t_point		pl;
 
 	if (argc != 2 && argc != 3)
 		return (error_message("Error\nWrong number of arguments given\
 		to the program\n"));
-	if (!(mapinfo = malloc(sizeof(t_mapdata))))
+	if (!(MAPINFO = malloc(sizeof(t_mapdata))))
 		return (error_message("Error\nError during a memory allocation\n"));
-	if(ft_init(mapinfo, argv[1]))
-		return(error_message("Error\nWrong file extension\n"));
+	if (ft_init(argv[1]))
+		return (error_message("Error\nWrong file extension\n"));
 	if (reading_file(argv[1]))
-        return (-1);
+		return (-1);
 	init_mlx_stuff(&pl);
-    draw_map(&pl);
+	draw_map(&pl);
 	if (argc == 3 && !ft_strncmp(argv[2], "--save", 7))
 		take_screenshot();
 	else if (argc == 3 && ft_strncmp(argv[2], "--save", 7))
-		return(error_message("Error\nWrong argument\n"));
-    mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
-    mlx_put_image_to_window(pl.mlx_ptr,pl.win_ptr,pl.color_buffer_texture,0,0);
-    mlx_loop(pl.mlx_ptr);
-    free(mapinfo);
-    free(g_rays);
+		return (error_message("Error\nWrong argument\n"));
+	mlx_loop_hook(pl.mlx_ptr, move_p, &pl);
+	mlx_put_image_to_window(pl.mlx_ptr, pl.win_ptr, pl.color_buffer_texture,
+	0, 0);
+	mlx_loop(pl.mlx_ptr);
+	free(MAPINFO);
+	free(g_rays);
 }

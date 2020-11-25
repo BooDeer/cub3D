@@ -6,11 +6,11 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 21:08:03 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/24 16:34:39 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/24 18:49:06 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3d.h"
 
 void		ft_fill_mapsp2(t_fmap *fmap)
 {
@@ -57,7 +57,7 @@ void		check_arg_map(char *line, int *param, int i)
 {
 	if ((line[i] == '1' || line[i] == ' '))
 	{
-		ft_read_map(line, mapinfo);
+		ft_read_map(line);
 	}
 	else if (MFR && *param != 9)
 		error_message("Error\nthe map should be the last element of\
@@ -73,19 +73,19 @@ void		check_arg_map(char *line, int *param, int i)
 void		check_argument(char *line, int *param, int i)
 {
 	if (line[i] == 'R' && ++*param)
-		ft_resolution(&line[i], mapinfo);
+		ft_resolution(&line[i]);
 	if (line[i] == 'S' && line[i + 1] == 'O' && ++*param)
-		ft_texture(&line[i], mapinfo);
+		ft_texture(&line[i]);
 	if (line[i] == 'N' && line[i + 1] == 'O' && ++*param)
-		ft_texture(&line[i], mapinfo);
+		ft_texture(&line[i]);
 	if (line[i] == 'E' && line[i + 1] == 'A' && ++*param)
-		ft_texture(&line[i], mapinfo);
+		ft_texture(&line[i]);
 	if (line[i] == 'W' && line[i + 1] == 'E' && ++*param)
-		ft_texture(&line[i], mapinfo);
+		ft_texture(&line[i]);
 	if (line[i] == 'S' && line[i + 1] == ' ' && ++*param)
-		ft_texture(&line[i], mapinfo);
+		ft_texture(&line[i]);
 	if ((line[i] == 'F' || line[i] == 'C') && line[i + 1] == ' ' && ++*param)
-		ft_color_value(&line[i], mapinfo);
+		ft_color_value(&line[i]);
 	check_arg_map(line, param, i);
 }
 

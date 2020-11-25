@@ -6,11 +6,11 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/14 13:39:49 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/24 17:20:13 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/24 18:44:14 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3d.h"
 
 static	int			create_file(char *file_name)
 {

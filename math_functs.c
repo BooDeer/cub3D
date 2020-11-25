@@ -6,11 +6,11 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 17:51:54 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/18 17:53:56 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/24 18:43:57 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3d.h"
 
 float	normalize_angle(float angle)
 {

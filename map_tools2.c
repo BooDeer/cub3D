@@ -6,11 +6,11 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 23:38:44 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/23 17:49:21 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/24 18:47:37 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3d.h"
 
 int					error_message(char *error)
 {
@@ -18,8 +18,7 @@ int					error_message(char *error)
 	return (-1);
 }
 
-int					fill_color_values(char *arr, t_mapdata *mapinfo,
-int f_or_c, int i)
+int					fill_color_values(char *arr, int f_or_c, int i)
 {
 	int		tmp;
 
@@ -31,13 +30,13 @@ int f_or_c, int i)
 	{
 		if (F[2] != -1)
 			return (error_message("Error\nan argument is duplicated\n"));
-		mapinfo->floor_color[i] = tmp;
+		g_mapinfo->floor_color[i] = tmp;
 	}
 	else
 	{
 		if (C[2] != -1)
 			return (error_message("Error\nan argument is duplicated\n"));
-		mapinfo->ceilling_color[i] = tmp;
+		g_mapinfo->ceilling_color[i] = tmp;
 	}
 	return (0);
 }
@@ -49,7 +48,7 @@ static	int			check_map_extension(char *extension)
 	return (0);
 }
 
-int					ft_init(t_mapdata *mapinfo, char *extension)
+int					ft_init(char *extension)
 {
 	if (check_map_extension(extension))
 		return (-1);

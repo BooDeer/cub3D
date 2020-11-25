@@ -6,11 +6,11 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 22:37:38 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/06 09:31:04 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/24 18:47:24 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3d.h"
 
 size_t			ft_strlen2(char *s)
 {
@@ -45,7 +45,7 @@ int				arr_size(char **arr)
 	return (i);
 }
 
-int				free_struct(t_mapdata *mapinfo, char *line)
+int				free_struct(char *line)
 {
 	(SO != NULL) ? free(SO) : 0;
 	(EA != NULL) ? free(EA) : 0;

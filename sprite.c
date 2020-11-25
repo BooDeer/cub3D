@@ -6,11 +6,11 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 17:54:20 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/23 19:00:53 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/25 11:07:23 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3d.h"
 
 void		sort_sprites(void)
 {
@@ -68,7 +68,7 @@ void		generate_sprites(int id)
 	}
 }
 
-void		draw_sprite(point *pl)
+void		draw_sprite(t_point *pl)
 {
 	float	angle;
 	int		k;
@@ -80,22 +80,22 @@ void		draw_sprite(point *pl)
 		SPRITES[k].dist = sqrtf(((SPRITES[k].x) - pl->x) * ((SPRITES[k].x) -
 		pl->x) + ((SPRITES[k].y) - pl->y) * ((SPRITES[k].y) - pl->y));
 		angle = atan2f(SPRITES[k].y - pl->y, SPRITES[k].x - pl->x);
-		while (angle - pl->rotationAngle > M_PI)
+		while (angle - pl->rotation_angle > M_PI)
 			angle -= 2 * M_PI;
-		while (angle - pl->rotationAngle < -M_PI)
+		while (angle - pl->rotation_angle < -M_PI)
 			angle += 2 * M_PI;
 		if (HEIGHT > WIDTH)
 			SPRITES[k].size = (HEIGHT / SPRITES[k].dist) * TILE_SIZE;
 		else
 			SPRITES[k].size = (WIDTH / SPRITES[k].dist) * TILE_SIZE;
 		SPRITES[k].y_off = HEIGHT / 2 - (int)SPRITES[k].size / 2;
-		SPRITES[k].x_off = ((DEG(angle) - DEG(pl->rotationAngle)) * WIDTH)
+		SPRITES[k].x_off = ((DEG(angle) - DEG(pl->rotation_angle)) * WIDTH)
 		/ (float)TILE_SIZE + ((WIDTH / 2) - (int)SPRITES[k].size / 2);
 		generate_sprites(k);
 	}
 }
 
-void		init_sprit(point *pl)
+void		init_sprit(t_point *pl)
 {
 	int			i;
 	int			j;

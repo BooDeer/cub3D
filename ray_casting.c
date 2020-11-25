@@ -6,13 +6,13 @@
 /*   By: hboudhir <hboudhir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/19 11:39:40 by hboudhir          #+#    #+#             */
-/*   Updated: 2020/11/20 17:29:13 by hboudhir         ###   ########.fr       */
+/*   Updated: 2020/11/25 11:21:58 by hboudhir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3d.h"
 
-void		rays_hinit(t_raynorm *ray, float ray_angle, point *pl)
+void		rays_hinit(t_raynorm *ray, float ray_angle, t_point *pl)
 {
 	ray->is_rayfacingdown = ray_angle > 0 && ray_angle < M_PI;
 	ray->is_rayfacingup = !ray->is_rayfacingdown;
@@ -56,7 +56,7 @@ void		horizontal_cast(t_raynorm *ray)
 	}
 }
 
-void		ray_vinit(t_raynorm *ray, float ray_angle, point *pl)
+void		ray_vinit(t_raynorm *ray, float ray_angle, t_point *pl)
 {
 	ray->foundvertwallhit = 0;
 	ray->vertwallhitx = 0;
@@ -70,33 +70,33 @@ void		ray_vinit(t_raynorm *ray, float ray_angle, point *pl)
 	ray->ystep = TILE_SIZE * tan(ray_angle);
 	ray->ystep *= (ray->is_rayfacingup && ray->ystep > 0) ? -1 : 1;
 	ray->ystep *= (ray->is_rayfacingdown && ray->ystep < 0) ? -1 : 1;
-	ray->nextVertTouchX = ray->xintercept;
-	ray->nextVertTouchY = ray->yintercept;
+	ray->nextverttouchx = ray->xintercept;
+	ray->nextverttouchy = ray->yintercept;
 }
 
 void		vertical_cast(t_raynorm *ray)
 {
-	while (ray->nextVertTouchX > 0 && ray->nextVertTouchX / TILE_SIZE < MAP_ROWS
-	&& ray->nextVertTouchY > 0 && ray->nextVertTouchY / TILE_SIZE < MAP_COLUMNS)
+	while (ray->nextverttouchx > 0 && ray->nextverttouchx / TILE_SIZE < MAP_ROWS
+	&& ray->nextverttouchy > 0 && ray->nextverttouchy / TILE_SIZE < MAP_COLUMNS)
 	{
-		ray->xtocheck = ray->nextVertTouchX + (ray->is_rayfacingleft ? -1 : 0);
-		ray->ytocheck = ray->nextVertTouchY;
+		ray->xtocheck = ray->nextverttouchx + (ray->is_rayfacingleft ? -1 : 0);
+		ray->ytocheck = ray->nextverttouchy;
 		if (collision(ray->xtocheck, ray->ytocheck))
 		{
-			ray->vertwallhitx = ray->nextVertTouchX;
-			ray->vertwallhity = ray->nextVertTouchY;
+			ray->vertwallhitx = ray->nextverttouchx;
+			ray->vertwallhity = ray->nextverttouchy;
 			ray->foundvertwallhit = 1;
 			break ;
 		}
 		else
 		{
-			ray->nextVertTouchX += ray->xstep;
-			ray->nextVertTouchY += ray->ystep;
+			ray->nextverttouchx += ray->xstep;
+			ray->nextverttouchy += ray->ystep;
 		}
 	}
 }
 
-void		cast_rayy(float ray_angle, int id, point *pl)
+void		cast_rayy(float ray_angle, int id, t_point *pl)
 {
 	t_raynorm ray;
 
